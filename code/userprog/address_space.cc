@@ -56,7 +56,7 @@ SwapHeader(NoffHeader *noffH)
 AddressSpace::AddressSpace(OpenFile *executable)
 {
     NoffHeader noffH;
-    unsigned   size;
+    unsigned   sizeRest, sizeCode, numPagesCode, numPagesRest, lastPageBytes, size;
 
     executable->ReadAt((char *) &noffH, sizeof noffH, 0);
     if (noffH.noffMagic != NOFFMAGIC &&
@@ -66,12 +66,20 @@ AddressSpace::AddressSpace(OpenFile *executable)
 
     // How big is address space?
 
-    size = noffH.code.size + noffH.initData.size + noffH.uninitData.size
+	// Calculo el número de páginas para el segmento de código
+	numPagesCode = divRoundUp(noffH.code.size, PAGE_SIZE);
+	sizeCode = numPagesCode * PAGE_SIZE;
+	lastPageBytes = sizeCode % PAGE_SIZE;
+
+	// Calculo el número de páginas para datos y demás
+    sizeRest = noffH.initData.size + noffH.uninitData.size
            + USER_STACK_SIZE;
       // We need to increase the size to leave room for the stack.
-    numPages = divRoundUp(size, PAGE_SIZE);
-    size = numPages * PAGE_SIZE;
-
+    numPagesRest = divRoundUp(sizeRest, PAGE_SIZE);
+    sizeRest = numPagesRest * PAGE_SIZE;
+	
+	size = sizeRest + sizeCode;
+	numPages = numPagesCode + numPagesRest;
 
 	/* Controlo que el size sea menor o igual a la cantidad de bytes libres en bitmap*/
     ASSERT(size <= bitmap->NumClear());
@@ -88,16 +96,18 @@ AddressSpace::AddressSpace(OpenFile *executable)
     pageTable = new TranslationEntry[numPages];
     for (unsigned i = 0; i < numPages; i++) {
         pageTable[i].virtualPage  = i;
-          // For now, virtual page number = physical page number.
         pageTable[i].physicalPage = bitmap->Find();
         pageTable[i].valid        = true;
         pageTable[i].use          = false;
         pageTable[i].dirty        = false;
-        pageTable[i].readOnly     = false;
+        if (i < numPagesCode)
+			pageTable[i].readOnly = true;
+			else
+			pageTable[i].readOnly = false;
           // If the code segment was entirely on a separate page, we could
           // set its pages to be read-only.
 
-        /* Inicializo en 0*/  
+        /* Inicializo en 0*/   
 		memset(machine->mainMemory + (pageTable[i].physicalPage)*PAGE_SIZE, 0, PAGE_SIZE);          
     }
 
@@ -105,17 +115,23 @@ AddressSpace::AddressSpace(OpenFile *executable)
     if (noffH.code.size > 0) {
         DEBUG('a', "Initializing code segment, at 0x%X, size %u\n",
               noffH.code.virtualAddr, noffH.code.size);
-        //no debe escribir seguido, porque ahora el codigo usa paginas virtuales
-        //virtualAddr esta mal
-        executable->ReadAt(&(machine->mainMemory[noffH.code.virtualAddr]),
-                           noffH.code.size, noffH.code.inFileAddr);
+        //Copio las páginas completas
+        for (unsigned i = 0; i < numPagesCode-1; i++) 
+			executable->ReadAt(&(machine->mainMemory[pageTable[i].physicalPage]),
+                          PAGE_SIZE, noffH.code.inFileAddr + i*PAGE_SIZE);
+        
+        // Copio la última página  
+        executable->ReadAt(&(machine->mainMemory[pageTable[numPagesCode-1].physicalPage]),
+                          lastPageBytes, noffH.code.inFileAddr + (numPagesCode-1)*PAGE_SIZE);    
+
     }
     if (noffH.initData.size > 0) {
         DEBUG('a', "Initializing data segment, at 0x%X, size %u\n",
               noffH.initData.virtualAddr, noffH.initData.size);
-        executable->ReadAt(
-          &(machine->mainMemory[noffH.initData.virtualAddr]),
-          noffH.initData.size, noffH.initData.inFileAddr);
+        // Copio las páginas. Quizás alguna quede con un final que no va. Improta?
+		for (unsigned i = numPagesCode; i < numPages; i++) 
+			executable->ReadAt(&(machine->mainMemory[pageTable[i].physicalPage]),
+                        PAGE_SIZE, noffH.initData.inFileAddr + i*PAGE_SIZE);
     }
 
 }
@@ -125,7 +141,7 @@ AddressSpace::AddressSpace(OpenFile *executable)
 /// Nothing for now!
 AddressSpace::~AddressSpace()
 {
-	for(int i = 0; i < numPages; i++)
+	for(unsigned i = 0; i < numPages; i++)
 		bitmap->Clear(pageTable[i].physicalPage);
     delete [] pageTable;
 }
