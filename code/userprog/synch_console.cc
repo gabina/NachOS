@@ -38,7 +38,7 @@ static void WriteDone(void *arg)
 	char
 	SynchConsole::ReadChar(){
 		readLock->Acquire();	
-		console->CheckCharAvail();		
+		//console->CheckCharAvail();		
 		/* Espero por la interrupción */
 		readAvail->P();
 		char ch = console->GetChar();
