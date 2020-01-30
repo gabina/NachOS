@@ -9,17 +9,17 @@ void
 ReadBufferFromUser(int userAddress, char *outString, unsigned byteCount){
 
 	int x;
-	/* por qué -1?
-	for(unsigned int i = 0; i < byteCount - 1; i++){*/
 	for(unsigned int i = 0; i < byteCount; i++){
 		machine->ReadMem(userAddress + i, 1, &x);
 		outString[i] = (unsigned char) x;
 	}
+	/* Agrego el final de cadena */
+	//outString[byteCount] =  '\0';
 
 }
 
 /* Lee de la dirección userAddress un string o una cantidad de maxByteCount y lo escribe en la dirección outString*/
-void 
+void
 ReadStringFromUser(int userAddress, char *outString, unsigned maxByteCount){
 	
 	int x;
@@ -30,10 +30,10 @@ ReadStringFromUser(int userAddress, char *outString, unsigned maxByteCount){
 		outString[count] = (unsigned char) x;
 		count ++;
 		machine->ReadMem(userAddress + count, 1, &x);
-	}	
-	/* Agrego el fin de cadena si es necesario */
-	if(count == maxByteCount -2)	
-		outString[count] =  '\0';
+	}
+	
+	/* Agrego el final de cadena */
+	outString[count] =  '\0';
 }
 
 /* Escribe byteCount del buffer en la direción de usuario userAddress */

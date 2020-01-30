@@ -82,13 +82,6 @@ AddressSpace::AddressSpace(OpenFile *executable)
 	size = sizeRest + sizeCode;
 	numPages = numPagesCode + numPagesRest;
 
-/*
-    size = noffH.code.size + noffH.initData.size + noffH.uninitData.size
-           + USER_STACK_SIZE;
-      // We need to increase the size to leave room for the stack.
-    numPages = divRoundUp(size, PAGE_SIZE);
-    size = numPages * PAGE_SIZE;
-*/
 
 	/* Controlo que el size sea menor o igual a la cantidad de bytes libres en bitmap*/
     ASSERT(size <= bitmap->NumClear());
@@ -103,7 +96,9 @@ AddressSpace::AddressSpace(OpenFile *executable)
     // First, set up the translation.
 
     pageTable = new TranslationEntry[numPages];
+
     for (unsigned i = 0; i < numPages; i++) {
+		DEBUG('a', "Initializing address space, virtual page number %u\n",i);
         pageTable[i].virtualPage  = i;
           // For now, virtual page number = physical page number.
         pageTable[i].physicalPage = bitmap->Find();
@@ -115,15 +110,15 @@ AddressSpace::AddressSpace(OpenFile *executable)
           // set its pages to be read-only.
 
         /* Inicializo en 0*/  
-		memset(machine->mainMemory + (pageTable[i].physicalPage)*PAGE_SIZE, 0, PAGE_SIZE);          
+		memset(machine->mainMemory + (pageTable[i].physicalPage)*PAGE_SIZE, 0, PAGE_SIZE);
+		DEBUG('a', "Initializing to zero, physical page number %u\n",pageTable[i].physicalPage);          
     }
+
 
     // Then, copy in the code and data segments into memory.
     if (noffH.code.size > 0) {
 		DEBUG('a', "Initializing code space, num pages %u, size %u\n",
 			numPagesCode, sizeCode);
-        //DEBUG('a', "Initializing code segment, at 0x%X, size %u\n",
-          //    noffH.code.virtualAddr, noffH.code.size);
 
         //Copio las páginas completas
         for (unsigned i = 0; i < numPagesCode-1; i++){

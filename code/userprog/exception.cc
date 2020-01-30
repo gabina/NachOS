@@ -103,7 +103,6 @@ ExceptionHandler(ExceptionType which)
 				
 				/* Si el archivo a leer es la consola, utilizo la clase SynchConsole*/
 				if(idFile == 0){
-					//SynchConsole *sc = new SynchConsole((char *) "Console 1", NULL, NULL);
 					char ch;
 					for (int i = 0; i < size; i++){
 						ch = synchChonsole->ReadChar();
@@ -143,11 +142,10 @@ ExceptionHandler(ExceptionType which)
 				int sizeWritten;
 				char * localBuffer = new char [size];	
 				ReadBufferFromUser(buffer, localBuffer, size);
-				if(idFile == 1){
-					//SynchConsole *sc = new SynchConsole((char *) "Console 1", NULL, NULL);
+				if(idFile == 1)
 					for (int i = 0; i < size; i++)
 						synchChonsole ->WriteChar(localBuffer[i]);
-				}else{
+				else{
 					/* Si es 0, devuelvo error*/
 					if(idFile == 0){
 						DEBUG('a',"Error\n");
@@ -181,6 +179,7 @@ ExceptionHandler(ExceptionType which)
 				SpaceId spaceID = (SpaceId) machine->ReadRegister(4);
 				Thread* t = processTable->GetProcess(spaceID);
 				int s = t->Join();
+				printf("spaceID leido\n");
 				machine->WriteRegister(2, s);				
 				}
 				break;
@@ -190,22 +189,35 @@ ExceptionHandler(ExceptionType which)
 				int direc = machine->ReadRegister(4);
 				char* nombre = new char [MAX_NAME];
 				ReadStringFromUser(direc, nombre, MAX_NAME);
-				printf("Llamada a exec con %s \n",	nombre);
+				printf("Llamada a exec con %s\n",nombre);
 				/* Abro el archivo */			
 				OpenFile *executable = fileSystem->Open(nombre);
 				if(executable==NULL){
-					printf("Dar un archivo válido\n");
+					printf("Error al intentar abrir archivo %s\n",nombre);
+					printf("Proceso %s terminado\n",currentThread->GetName());
+					currentThread->Finish();
+					break;
 					//terminar el proceso
 					//o avisar fallo
 				}
+				delete nombre;
 				/* Reservo espacio*/
 				AddressSpace *space;
+				printf("%s\n",currentThread->GetName());
 				space = new AddressSpace(executable);
 				/* Creo el nuevo hilo y asigno el espacio */
-				Thread * t = new Thread("user prog");
+				
+				printf("%s\n",currentThread->GetName());
+				Port * dadPort = currentThread->GetPort();
+				if (dadPort == NULL)
+					printf("El puerto es vacío. No se podrá hacer Join del nuevo hilo\n");
+				
+				Thread * t = new Thread("user prog", dadPort);
 				t->space = space;
 				/* spaceID no está seteado al spaceID del thread*/
 				SpaceId spaceID = processTable->NewProcess(t);
+				/* Retorno el spaceID*/
+				machine->WriteRegister(2, spaceID);
 				
 				t->Fork(processCreator,NULL);
 				}
