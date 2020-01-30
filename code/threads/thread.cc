@@ -47,7 +47,6 @@ Thread::Thread(const char* threadName, Port * dadPort, int prio)
 	/* Asigno el puerto. Si es nulo es porque no hará Join */
 	threadPort = dadPort;
 	threadTable = new OpenFileTable();
-	threadTable = new OpenFileTable();
 }
 
 /// De-allocate a thread.
@@ -63,6 +62,10 @@ Thread::~Thread()
     DEBUG('t', "Deleting thread \"%s\"\n", name);
 
     ASSERT(this != currentThread);
+    
+    delete space;
+    delete threadTable;
+    
     if (stack != NULL)
         DeallocBoundedArray((char *) stack, STACK_SIZE * sizeof *stack);
 }
