@@ -55,12 +55,28 @@ void WriteStringToUser(const char *string, int userAddress){
 	machine->WriteMem(userAddress + i, 1, string[i]);
 }
 
-void
+
+/*Escribe los argumentos de args en la pila
+ * arg2
+ * arg1
+ * arg0
+ * ...
+ * 0
+ * &arg2
+ * &arg1
+ * &arg0 ****
+ * registers
+ * 
+ * Devuelve **** */
+
+int*
 WriteArgs(char **args)
 {
     ASSERT(args != NULL);
 
     DEBUG('e', "Writing command line arguments into child process.\n");
+    //Donde retorno la cantida de argumentos y la dirección donde están
+    int *ret = new int [2];
 
     // Start writing the arguments where the current SP points.
     int args_address[MAX_ARG_COUNT];
@@ -76,8 +92,13 @@ WriteArgs(char **args)
     }
     ASSERT(i < MAX_ARG_COUNT);
 
+    // Guardo la cantidad
+    ret[0] = i;
+
     sp -= sp % 4;     // Align the stack to a multiple of four.
     sp -= i * 4 + 4;  // Make room for the array and the trailing NULL.
+    // Guardo la dirección
+    ret[1] = sp;
     for (unsigned j = 0; j < i; j++)
         // Save the address of the j-th argument counting from the end down
         // to the beginning.
@@ -87,20 +108,27 @@ WriteArgs(char **args)
 
     machine->WriteRegister(STACK_REG, sp);
     delete args;  // Free the array.
+
+    return ret;
 }
+
+/* Recupera los argumentos de la pila.
+ * address debe apuntar a ****
+ * */
 
 char **
 SaveArgs(int address)
 {
     ASSERT(address != 0);
 
-    // Count the number of arguments up to NULL.
+    // Count the number of arguments up to NULL. En i-1 queda la cantidad de argumentos
     int val;
     unsigned i = 0;
     do {
         machine->ReadMem(address + i * 4, 4, &val);
         i++;
     } while (i < MAX_ARG_COUNT && val != 0);
+
     if (i == MAX_ARG_COUNT && val != 0)
         // The maximum number of arguments was reached but the last is not
         // NULL.  Return NULL as error.
@@ -113,9 +141,15 @@ SaveArgs(int address)
     for (unsigned j = 0; j < i - 1; j++) {
         // For each pointer, read the corresponding string.
         ret[j] = new char [MAX_ARG_LENGTH];
+        // En val queda la dirección del j-ésimo argumento
         machine->ReadMem(address + j * 4, 4, &val);
+        // Escribo el argumento en ret[j]
         ReadStringFromUser(val, ret[j], MAX_ARG_LENGTH);
     }
+
+    //for(unsigned j = 0;j < i-1;j++)
+      //  printf("Argumento leído %s\n",ret[i]);
+
     ret[i - 1] = NULL;  // Write the trailing NULL.
 
     return ret;

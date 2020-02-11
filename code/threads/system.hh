@@ -33,6 +33,7 @@ extern Scheduler *scheduler;         ///< The ready list.
 extern Interrupt *interrupt;         ///< Interrupt status.
 extern Statistics *stats;            ///< Performance metrics.
 extern Timer *timer;                 ///< The hardware alarm clock.
+extern Port * mainPort;
 
 #ifdef USER_PROGRAM
 #include "machine/machine.hh"

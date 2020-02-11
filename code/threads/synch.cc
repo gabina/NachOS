@@ -108,7 +108,7 @@ void
 Lock::Acquire()
 {
 	
-	DEBUG('t', "Thread %s pidiendo agarrar el lock %s \n",currentThread->GetName(),GetName());
+	//DEBUG('t', "Thread %s pidiendo agarrar el lock %s \n",currentThread->GetName(),GetName());
 	ASSERT(!IsHeldByCurrentThread());
 	int myPrio = currentThread->GetPriority();
 
@@ -128,7 +128,7 @@ void
 Lock::Release()
 {
 	
-	DEBUG('t', "Thread %s Liberando el lock %s \n",currentThread->GetName(),GetName());	
+	//DEBUG('t', "Thread %s Liberando el lock %s \n",currentThread->GetName(),GetName());	
 	ASSERT(IsHeldByCurrentThread());
 	if(threadChanged != NULL)
 		currentThread->ChangePriority(currentThread->GetPriority(), threadChanged->GetPriority(), threadChanged);
@@ -238,13 +238,13 @@ Port::Send(int message)
 
 	/* Si la lista de bufferes está vacía, entonces espero a que algún receptor me despierte */
 	while(buffer->IsEmpty()){
-		DEBUG('t',"Buffer is empty\n");
+		//DEBUG('t',"Buffer is empty\n");
 		secondCond->GetLock()->Release();
 		firstCond->Wait();
 		secondCond->GetLock()->Acquire();
 	}
 	
-	DEBUG('t',"Buffer is not empty\n");
+	//DEBUG('t',"Buffer is not empty\n");
 	/* Escribo el mensaje en uno de los buffers*/
 	if(!buffer->IsEmpty())
 		*(buffer->Remove()) = message;

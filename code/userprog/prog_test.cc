@@ -48,6 +48,8 @@ StartProcess(const char *filename)
 /// Stop when the user types a `q`.
 
 /// Para probarla hacer: ./nachos -c
+
+/// y comentar la SynchConsole del sistema
 void
 ConsoleTest(const char *in, const char *out)
 {

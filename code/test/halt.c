@@ -15,6 +15,7 @@
 int
 main(void)
 {
+	int a = 3;
     Halt();
     // Not reached.
 }

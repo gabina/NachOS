@@ -21,6 +21,7 @@ Interrupt *interrupt;         ///< Interrupt status.
 Statistics *stats;            ///< Performance metrics.
 Timer *timer;                 ///< The hardware timer device, for invoking
                               ///< context switches.
+Port * mainPort = NULL;
 
 // 2007, Jose Miguel Santos Espino
 PreemptiveScheduler *preemptiveScheduler = NULL;
@@ -34,7 +35,8 @@ FileSystem *fileSystem;
 SynchDisk *synchDisk;
 #endif
 
-#ifdef USER_PROGRAM  // Requires either *FILESYS* or *FILESYS_STUB*.
+// Requires either *FILESYS* or *FILESYS_STUB*.
+#ifdef USER_PROGRAM  
 Machine *machine;  ///< User program memory and registers.
 ProcessTable *processTable;
 BitMap *bitmap;
@@ -159,10 +161,14 @@ Initialize(int argc, char **argv)
 
     threadToBeDestroyed = NULL;
 
+#ifdef USER_PROGRAM
+	mainPort = new Port("Main Port");
+    timer = new Timer(TimerInterruptHandler, 0, false);
+#endif
     // We did not explicitly allocate the current thread we are running in.
     // But if it ever tries to give up the CPU, we better have a `Thread`
     // object to save its state.
-    currentThread = new Thread("main");
+    currentThread = new Thread("main", mainPort);
     currentThread->setStatus(RUNNING);
 
     interrupt->Enable();
@@ -177,9 +183,8 @@ Initialize(int argc, char **argv)
 #ifdef USER_PROGRAM
     machine = new Machine(debugUserProg);  // This must come first.
     processTable = new ProcessTable();
-    bitmap = new BitMap(MEMORY_SIZE);
+    bitmap = new BitMap(NUM_PHYS_PAGES);
     synchChonsole = new SynchConsole((char *) "Consola", NULL, NULL);
-    
 #endif
 
 #ifdef FILESYS

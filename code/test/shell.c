@@ -21,7 +21,13 @@ static inline void
 WritePrompt(OpenFileId output)
 {
     static const char PROMPT[] = "--> ";
-    Write(PROMPT, sizeof PROMPT - 1, output);
+    char prompt[4];
+    prompt[0] = '-';
+    prompt[1] = '-';
+    prompt[2] = '>';
+    prompt[3] = ' ';
+    //Write(PROMPT, sizeof PROMPT - 1, output);
+    Write(prompt, 4, output);
 }
 
 static inline void
@@ -116,8 +122,8 @@ main(void)
 
         // Comment and uncomment according to whether command line arguments
         // are given in the system call or not.
-        const SpaceId newProc = Exec(line);
-        //const SpaceId newProc = Exec(line, argv);
+        //const SpaceId newProc = Exec(line);
+        const SpaceId newProc = Exec(line, argv);
 
         // TO DO: check for errors when calling `Exec`; this depends on how
         //        errors are reported.

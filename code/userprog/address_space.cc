@@ -56,7 +56,8 @@ SwapHeader(NoffHeader *noffH)
 AddressSpace::AddressSpace(OpenFile *executable)
 {
     NoffHeader noffH;
-    unsigned   sizeRest, sizeCode, numPagesCode, numPagesRest, lastPageBytes, size;
+    unsigned   sizeData, sizeCode, numPagesCode, numPagesData, 
+               lastPageBytes, size, sizeZero, numPagesZero;
 
     executable->ReadAt((char *) &noffH, sizeof noffH, 0);
     if (noffH.noffMagic != NOFFMAGIC &&
@@ -73,19 +74,23 @@ AddressSpace::AddressSpace(OpenFile *executable)
 	if (lastPageBytes == 0)
 		lastPageBytes = PAGE_SIZE;
 
-	// Calculo el número de páginas para datos y demás
-    sizeRest = noffH.initData.size + noffH.uninitData.size
-           + USER_STACK_SIZE; // We need to increase the size to leave room for the stack.
-    numPagesRest = divRoundUp(sizeRest, PAGE_SIZE);
-    sizeRest = numPagesRest * PAGE_SIZE;
+	// Calculo el número de páginas para datos inicializados
+  numPagesData = divRoundUp(noffH.initData.size, PAGE_SIZE);
+  sizeData = numPagesData * PAGE_SIZE;
 	
-	size = sizeRest + sizeCode;
-	numPages = numPagesCode + numPagesRest;
+  // Calculo el número de páginas que irán en cero (datos no incializados y stack)
+  sizeZero = noffH.uninitData.size + USER_STACK_SIZE; 
+  // We need to increase the size to leave room for the stack.
+  numPagesZero = divRoundUp(sizeZero, PAGE_SIZE);
+  sizeZero = numPagesZero * PAGE_SIZE;
 
-
+	size = sizeData + sizeCode + sizeZero;
+	numPages = numPagesCode + numPagesData + numPagesZero;
+  
 	/* Controlo que el size sea menor o igual a la cantidad de bytes libres en bitmap*/
-    ASSERT(size <= bitmap->NumClear());
-    // no debe explotar todo
+  //ASSERT(size <= bitmap->NumClear());
+  ASSERT(numPages <= bitmap->NumClear());
+  // no debe explotar todo
     
       // Check we are not trying to run anything too big -- at least until we
       // have virtual memory.
@@ -98,20 +103,18 @@ AddressSpace::AddressSpace(OpenFile *executable)
     pageTable = new TranslationEntry[numPages];
 
     for (unsigned i = 0; i < numPages; i++) {
-		DEBUG('a', "Initializing address space, virtual page number %u\n",i);
-        pageTable[i].virtualPage  = i;
-          // For now, virtual page number = physical page number.
-        pageTable[i].physicalPage = bitmap->Find();
-        pageTable[i].valid        = true;
-        pageTable[i].use          = false;
-        pageTable[i].dirty        = false;
-        pageTable[i].readOnly     = false;
-          // If the code segment was entirely on a separate page, we could
-          // set its pages to be read-only.
-
-        /* Inicializo en 0*/  
-		memset(machine->mainMemory + (pageTable[i].physicalPage)*PAGE_SIZE, 0, PAGE_SIZE);
-		DEBUG('a', "Initializing to zero, physical page number %u\n",pageTable[i].physicalPage);          
+  		DEBUG('a', "Initializing address space, virtual page number %u\n",i);
+      pageTable[i].virtualPage  = i;
+      pageTable[i].physicalPage = bitmap->Find();
+      pageTable[i].valid        = true;
+      pageTable[i].use          = false;
+      pageTable[i].dirty        = false;
+      pageTable[i].readOnly     = false;
+      // If the code segment was entirely on a separate page, we could
+      // set its pages to be read-only.
+      /* Inicializo en 0*/  
+		  memset(machine->mainMemory + (pageTable[i].physicalPage)*PAGE_SIZE, 0, PAGE_SIZE);
+		  DEBUG('a', "Initializing to zero, physical page number %u\n",pageTable[i].physicalPage);    
     }
 
 
@@ -122,11 +125,11 @@ AddressSpace::AddressSpace(OpenFile *executable)
 
         //Copio las páginas completas
         for (unsigned i = 0; i < numPagesCode-1; i++){
-			 DEBUG('a', "Initializing code segment, at 0x%X, size %u\n",
+			    DEBUG('a', "Initializing code segment, at 0x%X, size %u\n",
               pageTable[i].physicalPage*PAGE_SIZE, PAGE_SIZE); 
-              DEBUG('a',"Reading from 0x%X\n",noffH.code.inFileAddr + i*PAGE_SIZE);
-			executable->ReadAt(&(machine->mainMemory[pageTable[i].physicalPage*PAGE_SIZE]),
-                          PAGE_SIZE, noffH.code.inFileAddr + i*PAGE_SIZE);
+          DEBUG('a',"Reading from 0x%X\n",noffH.code.inFileAddr + i*PAGE_SIZE);
+          executable->ReadAt(&(machine->mainMemory[pageTable[i].physicalPage*PAGE_SIZE]),
+                              PAGE_SIZE, noffH.code.inFileAddr + i*PAGE_SIZE);
         }
         // Copio la última página  
         DEBUG('a', "Initializing code segment - last page, at 0x%X, size %u\n",
@@ -136,15 +139,15 @@ AddressSpace::AddressSpace(OpenFile *executable)
 
     }
     if (noffH.initData.size > 0) {
-		DEBUG('a', "Initializing data space, num pages %u, size %u\n",
-			numPagesRest, sizeRest);
-        // Copio las páginas. Quizás alguna quede con un final que no va. Improta?
-		for (unsigned i = numPagesCode; i < numPages; i++){
-			DEBUG('a', "Initializing data segment, at 0x%X, size %u\n",
-				pageTable[i].physicalPage*PAGE_SIZE, PAGE_SIZE); 
-			DEBUG('a',"Reading from 0x%X\n",noffH.code.inFileAddr + (i-numPagesCode)*PAGE_SIZE);
-			executable->ReadAt(&(machine->mainMemory[pageTable[i].physicalPage*PAGE_SIZE]),
-                        PAGE_SIZE, noffH.initData.inFileAddr + (i-numPagesCode)*PAGE_SIZE);
+      DEBUG('a', "Initializing data space, num pages %u, size %u\n",
+        numPagesData, sizeData);
+          // Copio las páginas. Quizás alguna quede con un final que no va. Improta?
+      for (unsigned i = numPagesCode; i < (numPages - numPagesZero); i++){
+        DEBUG('a', "Initializing data segment, at 0x%X, size %u\n",
+          pageTable[i].physicalPage*PAGE_SIZE, PAGE_SIZE); 
+        DEBUG('a',"Reading from 0x%X\n",noffH.code.inFileAddr + (i-numPagesCode)*PAGE_SIZE);
+        executable->ReadAt(&(machine->mainMemory[pageTable[i].physicalPage*PAGE_SIZE]),
+                          PAGE_SIZE, noffH.initData.inFileAddr + (i-numPagesCode)*PAGE_SIZE);
 		}
     }
 
@@ -185,6 +188,7 @@ AddressSpace::InitRegisters()
     machine->WriteRegister(STACK_REG, numPages * PAGE_SIZE - 16);
     DEBUG('a', "Initializing stack register to %u\n",
           numPages * PAGE_SIZE - 16);
+
 }
 
 /// On a context switch, save any machine state, specific to this address

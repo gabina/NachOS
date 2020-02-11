@@ -164,6 +164,10 @@ public:
 		return spaceId;
 	}
 	
+	Port* GetPort()
+	{
+		return threadPort;
+	}
 private:
     // Some of the private data for this class is listed above.
 

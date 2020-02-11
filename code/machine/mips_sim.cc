@@ -81,6 +81,7 @@ Machine::OneInstruction(Instruction *instr)
 
         ASSERT(instr->opCode <= MAX_OPCODE);
         printf("At PC = 0x%X: ", registers[PC_REG]);
+        printf("Problem ");
         printf(str->string, instr->RegFromType(str->args[0]),
                instr->RegFromType(str->args[1]),
                instr->RegFromType(str->args[2]));

@@ -28,11 +28,19 @@
 #include "args.cc"
 
 #define MAX_NAME 64
+#define MAX_ARGS 8
 
+int nProc;
 void processCreator(void * arg)
 {
 	currentThread->space->InitRegisters();
 	currentThread->space->RestoreState(); // load page table register
+	//Escribo los argumentos en la pila
+	if (arg!= NULL){
+		int *ret = WriteArgs((char **) arg);
+		machine->WriteRegister(4, ret[0]);
+		machine->WriteRegister(5, ret[1]);
+	}
 	machine->Run(); // jump to the user progam
 	ASSERT(false); // machine->Run never returns;
 }
@@ -149,6 +157,7 @@ ExceptionHandler(ExceptionType which)
 					/* Si es 0, devuelvo error*/
 					if(idFile == 0){
 						DEBUG('a',"Error\n");
+						printf("No entró bien\n");
 						return;
 					}
 					OpenFileTable* fileTable = currentThread->GetTable();
@@ -176,20 +185,26 @@ ExceptionHandler(ExceptionType which)
 				}
 				break;
 			case SC_Join:{
+				printf("Estoy en Join\n");
 				SpaceId spaceID = (SpaceId) machine->ReadRegister(4);
 				Thread* t = processTable->GetProcess(spaceID);
 				int s = t->Join();
-				printf("spaceID leido\n");
 				machine->WriteRegister(2, s);				
 				}
 				break;
 			case SC_Exec:{
-				/* Leo el argumento */
+				/* Leo el argumento. El nombre del archivo y el parámetro con el cual llamarlo, si hubiere */
 				printf("Estoy en exec\n");
-				int direc = machine->ReadRegister(4);
-				char* nombre = new char [MAX_NAME];
-				ReadStringFromUser(direc, nombre, MAX_NAME);
+				int name = machine->ReadRegister(4);
+				int args = machine->ReadRegister(5);
+				char *nombre = new char [MAX_NAME];
+				char **localArgs = new char * [MAX_ARGS];
+				ReadStringFromUser(name, nombre, MAX_NAME);
+				localArgs = SaveArgs(args);
+
 				printf("Llamada a exec con %s\n",nombre);
+				printf("%s\n",currentThread->GetName());	
+
 				/* Abro el archivo */			
 				OpenFile *executable = fileSystem->Open(nombre);
 				if(executable==NULL){
@@ -201,25 +216,22 @@ ExceptionHandler(ExceptionType which)
 					//o avisar fallo
 				}
 				delete nombre;
+
 				/* Reservo espacio*/
 				AddressSpace *space;
-				printf("%s\n",currentThread->GetName());
 				space = new AddressSpace(executable);
+					
 				/* Creo el nuevo hilo y asigno el espacio */
-				
-				printf("%s\n",currentThread->GetName());
 				Port * dadPort = currentThread->GetPort();
-				if (dadPort == NULL)
-					printf("El puerto es vacío. No se podrá hacer Join del nuevo hilo\n");
-				
-				Thread * t = new Thread("user prog", dadPort);
+				char* procName = new char [20];
+				snprintf(procName, 20, "user prog_%d", (int) (nProc++));
+				Thread * t = new Thread(procName, dadPort);
 				t->space = space;
 				/* spaceID no está seteado al spaceID del thread*/
 				SpaceId spaceID = processTable->NewProcess(t);
 				/* Retorno el spaceID*/
 				machine->WriteRegister(2, spaceID);
-				
-				t->Fork(processCreator,NULL);
+				t->Fork(processCreator,localArgs);
 				}
 				break;
 			default:
