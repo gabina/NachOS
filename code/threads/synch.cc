@@ -59,7 +59,6 @@ Semaphore::P()
       // Disable interrupts.
 
     while (value == 0) {  // Semaphore not available.
-		DEBUG('t',"Sempahore %s is zero\n",GetName());
         queue->Append(currentThread);  // So go to sleep.
         currentThread->Sleep();
     }
@@ -107,8 +106,6 @@ Lock::~Lock()
 void
 Lock::Acquire()
 {
-	
-	//DEBUG('t', "Thread %s pidiendo agarrar el lock %s \n",currentThread->GetName(),GetName());
 	ASSERT(!IsHeldByCurrentThread());
 	int myPrio = currentThread->GetPriority();
 
@@ -127,8 +124,6 @@ Lock::Acquire()
 void
 Lock::Release()
 {
-	
-	//DEBUG('t', "Thread %s Liberando el lock %s \n",currentThread->GetName(),GetName());	
 	ASSERT(IsHeldByCurrentThread());
 	if(threadChanged != NULL)
 		currentThread->ChangePriority(currentThread->GetPriority(), threadChanged->GetPriority(), threadChanged);
@@ -171,7 +166,6 @@ Condition::Wait()
 	currentThread->Sleep();  
 	*/
 	ASSERT(condlock->IsHeldByCurrentThread());	
-	DEBUG('t', "Thread %s wating for condition %s\n", currentThread->GetName(),GetName());
 	char * semName = new char [60];
 	sprintf(semName,"SemaphoreCondition%s",GetName());
 	/* Creo un nuevo semáforo en 0 */
@@ -192,7 +186,6 @@ void
 Condition::Signal()
 {
 	ASSERT(condlock->IsHeldByCurrentThread());
-	DEBUG('t',"Thread %s signaled\n", currentThread->GetName());
 	Semaphore* s;
 	if(!queue->IsEmpty()){
 		s = queue->Remove();
@@ -238,13 +231,11 @@ Port::Send(int message)
 
 	/* Si la lista de bufferes está vacía, entonces espero a que algún receptor me despierte */
 	while(buffer->IsEmpty()){
-		//DEBUG('t',"Buffer is empty\n");
 		secondCond->GetLock()->Release();
 		firstCond->Wait();
 		secondCond->GetLock()->Acquire();
 	}
 	
-	//DEBUG('t',"Buffer is not empty\n");
 	/* Escribo el mensaje en uno de los buffers*/
 	if(!buffer->IsEmpty())
 		*(buffer->Remove()) = message;
@@ -252,8 +243,7 @@ Port::Send(int message)
 	secondCond->Signal();		
 	/* Ya escribí el mensaje. Libero el lock y retorno */
 	firstCond->GetLock()->Release();
-	secondCond->GetLock()->Release();	
-	DEBUG('t', "Port %s send message\n", GetName());			
+	secondCond->GetLock()->Release();		
 
 }
 
@@ -270,8 +260,6 @@ Port::Receive(int * message)
 	firstCond->GetLock()->Release();
 	secondCond->Wait();
 	/* Una vez despierto ya recibí el mensaje y retorno */
-	secondCond->GetLock()->Release();	
-	
-	DEBUG('t', "Port %s received message\n", GetName());			
+	secondCond->GetLock()->Release();		
 	
 }

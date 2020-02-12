@@ -41,6 +41,7 @@ Thread::Thread(const char* threadName, Port * dadPort, int prio)
     space    = NULL;
 #endif
 
+    printf("Creando hilo %s\n",name);
 	/* Asigno prioridades. Por defecto es la 4 */
 	priority = prio;
 	realPriority = prio;
@@ -60,7 +61,7 @@ Thread::Thread(const char* threadName, Port * dadPort, int prio)
 Thread::~Thread()
 {
     DEBUG('t', "Deleting thread \"%s\"\n", name);
-
+    printf("Borrando thread %s\n",name);
     ASSERT(this != currentThread);
 
 #ifdef USER_PROGRAM    
@@ -149,7 +150,7 @@ Thread::Finish(int stat)
     ASSERT(this == currentThread);
 
     DEBUG('t', "Finishing thread \"%s\"\n", GetName());
-
+    printf("Finishing thread \"%s\"\n", GetName());
     threadToBeDestroyed = currentThread;
     Sleep();  // Invokes `SWITCH`.
     // Not reached.
@@ -181,12 +182,7 @@ Thread::Yield()
     DEBUG('t', "Yielding thread \"%s\"\n", GetName());
 
     nextThread = scheduler->FindNextToRun();
-/*
-	if(nextThread != NULL)
-		DEBUG('t', "Siguiente thread es \"%s\"\n", nextThread->GetName());
-	else
-		DEBUG('t', "Siguiente thread es NULL \n");
- */   
+    
     if (nextThread != NULL) {
         scheduler->ReadyToRun(this);
         scheduler->Run(nextThread);

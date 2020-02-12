@@ -141,18 +141,24 @@ ExceptionHandler(ExceptionType which)
 				}
 				/* Escribo en el buffer del usuario*/
 				WriteBufferToUser(localBuffer, buffer, sizeRead);
+				/*Retorno la cantidad de bytes leídos
+				0 indica EOF */
+				machine->WriteRegister(2, sizeRead);
+
 				}
 				break;
 			case SC_Write:{
 				int buffer = machine->ReadRegister(4);
 				int size = machine->ReadRegister(5);
 				OpenFileId idFile =(OpenFileId) machine->ReadRegister(6);
-				int sizeWritten;
+				int sizeWritten, i;
 				char * localBuffer = new char [size];	
 				ReadBufferFromUser(buffer, localBuffer, size);
-				if(idFile == 1)
-					for (int i = 0; i < size; i++)
+				if(idFile == 1){
+					for (i = 0; i < size; i++)
 						synchChonsole ->WriteChar(localBuffer[i]);
+					sizeWritten = size;
+				}
 				else{
 					/* Si es 0, devuelvo error*/
 					if(idFile == 0){
@@ -167,9 +173,9 @@ ExceptionHandler(ExceptionType which)
 						DEBUG('a',"Error: null pointer\n");
 						return;
 					}
-					printf("Voy a escribir %s\n",localBuffer);
 					sizeWritten = openFile->Write(localBuffer, size);
-				}							
+				}
+				machine->WriteRegister(2, sizeWritten);						
 				}
 				break;
 			case SC_Close:{
@@ -200,8 +206,12 @@ ExceptionHandler(ExceptionType which)
 				char *nombre = new char [MAX_NAME];
 				char **localArgs = new char * [MAX_ARGS];
 				ReadStringFromUser(name, nombre, MAX_NAME);
-				localArgs = SaveArgs(args);
 
+				if (args)
+					localArgs = SaveArgs(args);
+				else
+					localArgs = NULL;
+				
 				printf("Llamada a exec con %s\n",nombre);
 				printf("%s\n",currentThread->GetName());	
 

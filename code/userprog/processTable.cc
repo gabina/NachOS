@@ -21,23 +21,19 @@
     SpaceId
     ProcessTable::NewProcess(Thread * newThread){	
 		ASSERT(freeId!=NULL)
-		printf("Estoy en NewProcess\n");
 		/* Si tengo ids libres en la lista, uso el primero de ellos */
 		if(!freeId->IsEmpty()){
-			printf("Tengo IDs libres en la lista\n");
 			SpaceId spaceId = freeId->Remove();
 			table[spaceId] = newThread;
 			return spaceId;	
 		}
 		else{
-			printf("No tengo ids libre sen la lsita\n");
 			/* Si ya abrí la cantidad máxima de procesos, aviso y retorno -1 */
 			if(nextId > MAX_PROCESS){
 				printf("No es posible ejecutar un nuevo proceso\n");
 				return -1;
 			}else{
 			/* Utilizo el nextId */
-				printf("Voy a utilizar el nextID\n");
 				table[nextId] = newThread;
 				nextId ++;
 				return nextId - 1;

@@ -86,7 +86,7 @@ AddressSpace::AddressSpace(OpenFile *executable)
 
 	size = sizeData + sizeCode + sizeZero;
 	numPages = numPagesCode + numPagesData + numPagesZero;
-  
+
 	/* Controlo que el size sea menor o igual a la cantidad de bytes libres en bitmap*/
   //ASSERT(size <= bitmap->NumClear());
   ASSERT(numPages <= bitmap->NumClear());
@@ -158,6 +158,7 @@ AddressSpace::AddressSpace(OpenFile *executable)
 /// Nothing for now!
 AddressSpace::~AddressSpace()
 {
+  printf("Liberando\n");
 	for(unsigned i = 0; i < numPages; i++)
 		bitmap->Clear(pageTable[i].physicalPage);
     delete [] pageTable;
