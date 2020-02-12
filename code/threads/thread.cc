@@ -40,8 +40,8 @@ Thread::Thread(const char* threadName, Port * dadPort, int prio)
 #ifdef USER_PROGRAM
     space    = NULL;
 #endif
+    join = false;
 
-    printf("Creando hilo %s\n",name);
 	/* Asigno prioridades. Por defecto es la 4 */
 	priority = prio;
 	realPriority = prio;
@@ -61,7 +61,6 @@ Thread::Thread(const char* threadName, Port * dadPort, int prio)
 Thread::~Thread()
 {
     DEBUG('t', "Deleting thread \"%s\"\n", name);
-    printf("Borrando thread %s\n",name);
     ASSERT(this != currentThread);
 
 #ifdef USER_PROGRAM    
@@ -143,15 +142,15 @@ void
 Thread::Finish(int stat)
 {
 	/* Aviso que terminé, si se hizo Join */
-	if(threadPort != NULL)
+	if(join)
 		threadPort->Send(stat);
-		
+
     interrupt->SetLevel(INT_OFF);
     ASSERT(this == currentThread);
 
     DEBUG('t', "Finishing thread \"%s\"\n", GetName());
-    printf("Finishing thread \"%s\"\n", GetName());
     threadToBeDestroyed = currentThread;
+    processTable->DeleteProcess(spaceId);
     Sleep();  // Invokes `SWITCH`.
     // Not reached.
 }
@@ -249,6 +248,8 @@ Thread::ChangePriority(int myPrio, int anotherPrio,Thread* anotherThread){
 int
 Thread::Join()
 {
+    ASSERT (threadPort != NULL);
+    join = true;
 	int * message = new int;
 	threadPort->Receive(message);
 	return *message;

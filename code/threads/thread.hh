@@ -186,7 +186,10 @@ private:
     void StackAllocate(VoidFunctionPtr func, void *arg);
 
 	/// Puerto de comunicación para hacer join
-	Port * threadPort;
+	Port *threadPort;
+
+    /// Indica si hizo Join o no. Necesario para Finish()
+    bool join;
 	
 	/// Prioridad del thread -> la prioridad que se utiliza para el thread
 	int priority;

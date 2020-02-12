@@ -158,7 +158,6 @@ AddressSpace::AddressSpace(OpenFile *executable)
 /// Nothing for now!
 AddressSpace::~AddressSpace()
 {
-  printf("Liberando\n");
 	for(unsigned i = 0; i < numPages; i++)
 		bitmap->Clear(pageTable[i].physicalPage);
     delete [] pageTable;

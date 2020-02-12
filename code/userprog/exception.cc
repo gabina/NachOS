@@ -191,7 +191,6 @@ ExceptionHandler(ExceptionType which)
 				}
 				break;
 			case SC_Join:{
-				printf("Estoy en Join\n");
 				SpaceId spaceID = (SpaceId) machine->ReadRegister(4);
 				Thread* t = processTable->GetProcess(spaceID);
 				int s = t->Join();
@@ -200,7 +199,6 @@ ExceptionHandler(ExceptionType which)
 				break;
 			case SC_Exec:{
 				/* Leo el argumento. El nombre del archivo y el parámetro con el cual llamarlo, si hubiere */
-				printf("Estoy en exec\n");
 				int name = machine->ReadRegister(4);
 				int args = machine->ReadRegister(5);
 				char *nombre = new char [MAX_NAME];
@@ -211,9 +209,6 @@ ExceptionHandler(ExceptionType which)
 					localArgs = SaveArgs(args);
 				else
 					localArgs = NULL;
-				
-				printf("Llamada a exec con %s\n",nombre);
-				printf("%s\n",currentThread->GetName());	
 
 				/* Abro el archivo */			
 				OpenFile *executable = fileSystem->Open(nombre);
