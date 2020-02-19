@@ -10,7 +10,7 @@
 
 
 /// Sum total of the arrays does not fit in physical memory.
-#define DIM  20
+#define DIM  100
 
 static int A[DIM][DIM];
 static int B[DIM][DIM];
@@ -20,7 +20,14 @@ int
 main(void)
 {
     int i, j, k;
+    //int a = 3;
+    //char HOLA[4];
+    //HOLA[0] = 'a';
+    //HOLA[1] = 'b';
+	//HOLA[2] = 'c';
+	//HOLA[3] = 'd';
 
+	//Write("Inicializar\n", 12,1);
     // First initialize the matrices.
     for (i = 0; i < DIM; i++)
         for (j = 0; j < DIM; j++) {
@@ -29,6 +36,7 @@ main(void)
             C[i][j] = 0;
         }
 
+	//Write("Multiplicar\n", 12,1);	
     // Then multiply them together.
     for (i = 0; i < DIM; i++)
         for (j = 0; j < DIM; j++)

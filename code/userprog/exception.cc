@@ -183,6 +183,7 @@ ExceptionHandler(ExceptionType which)
 					break;
 				case SC_Exit:{
 					int status = machine->ReadRegister(4);
+					printf("Status %d\n",status);
 					/*Avisarle de algún modo al padre el status*/
 					currentThread->Finish(status);				
 					}
@@ -271,7 +272,6 @@ ExceptionHandler(ExceptionType which)
 			// Calculate the virtual page number, and offset within the page,
 			// from the virtual address.
 			unsigned vpn    = (unsigned) virtAddr / PAGE_SIZE;
-			unsigned offset = (unsigned) virtAddr % PAGE_SIZE;	
 
 			// Calculo la posición aleatoria del TLB que reemplazaré
 			int i = rand() % TLB_SIZE; 	
@@ -282,7 +282,7 @@ ExceptionHandler(ExceptionType which)
 			}
 			break;
 		case READ_ONLY_EXCEPTION:{
-			interrupt->Halt();
+			currentThread->Finish();
 			break;
 		}
 	}
