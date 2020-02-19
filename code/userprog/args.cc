@@ -4,13 +4,16 @@
 const unsigned MAX_ARG_COUNT  = 32;
 const unsigned MAX_ARG_LENGTH = 128;
 
-/* Lee de la dirección userAddress una cantidad byteCount y lo escribe en la dirección outString*/
+/* Lee de la dirección userAddress una cantidad byteCount 
+ * y lo escribe en la dirección outString.
+ * Si ReadMem falla, vuelve a intentar leer. */
 void 
 ReadBufferFromUser(int userAddress, char *outString, unsigned byteCount){
 
 	int x;
 	for(unsigned int i = 0; i < byteCount; i++){
-		machine->ReadMem(userAddress + i, 1, &x);
+		if(!machine->ReadMem(userAddress + i, 1, &x))
+            machine->ReadMem(userAddress + i, 1, &x);
 		outString[i] = (unsigned char) x;
 	}
 	/* Agrego el final de cadena */
@@ -24,12 +27,15 @@ ReadStringFromUser(int userAddress, char *outString, unsigned maxByteCount){
 	
 	int x;
 	unsigned int count = 0;
-	machine->ReadMem(userAddress, 1,  &x);
+	if (!machine->ReadMem(userAddress, 1,  &x))
+        machine->ReadMem(userAddress, 1,  &x);
 	while (count < maxByteCount - 1 && (unsigned char) x != '\0'){
-		machine->ReadMem(userAddress + count, 1, &x);
+		if(!machine->ReadMem(userAddress + count, 1, &x))
+            machine->ReadMem(userAddress + count, 1, &x);
 		outString[count] = (unsigned char) x;
 		count ++;
-		machine->ReadMem(userAddress + count, 1, &x);
+		if(!machine->ReadMem(userAddress + count, 1, &x))
+            machine->ReadMem(userAddress + count, 1, &x);
 	}
 	
 	/* Agrego el final de cadena */
@@ -40,7 +46,8 @@ ReadStringFromUser(int userAddress, char *outString, unsigned maxByteCount){
 void WriteBufferToUser(const char *buffer, int userAddress, unsigned byteCount){
 	
 	for(unsigned int i = 0; i < byteCount; i++)
-		machine->WriteMem(userAddress + i, 1, *(buffer + i));	
+		if(!machine->WriteMem(userAddress + i, 1, *(buffer + i)))
+            machine->WriteMem(userAddress + i, 1, *(buffer + i));
 }
 
 /* Escribe el string string en la dirección de usuario userAddress*/
@@ -48,11 +55,13 @@ void WriteStringToUser(const char *string, int userAddress){
 	
 	unsigned int i = 0;
 	while(string[i] != '\0'){
-		machine->WriteMem(userAddress + i, 1, string[i]);
+		if(!machine->WriteMem(userAddress + i, 1, string[i]))
+            machine->WriteMem(userAddress + i, 1, string[i]);
 		i ++;
 	}
 	/* Escribo el fin de cadena */
-	machine->WriteMem(userAddress + i, 1, string[i]);
+    if(!machine->WriteMem(userAddress + i, 1, string[i]))
+        machine->WriteMem(userAddress + i, 1, string[i]);
 }
 
 
@@ -102,8 +111,10 @@ WriteArgs(char **args)
     for (unsigned j = 0; j < i; j++)
         // Save the address of the j-th argument counting from the end down
         // to the beginning.
-        machine->WriteMem(sp + 4 * j, 4, args_address[j]);
-    machine->WriteMem(sp + 4 * i, 4, 0);  // The last is NULL.
+        if(!machine->WriteMem(sp + 4 * j, 4, args_address[j]))
+            machine->WriteMem(sp + 4 * j, 4, args_address[j]);
+    if(!machine->WriteMem(sp + 4 * i, 4, 0))  // The last is NULL.
+        machine->WriteMem(sp + 4 * i, 4, 0);
     sp -= 16;  // Make room for the “register saves”.
 
     machine->WriteRegister(STACK_REG, sp);
@@ -125,7 +136,8 @@ SaveArgs(int address)
     int val;
     unsigned i = 0;
     do {
-        machine->ReadMem(address + i * 4, 4, &val);
+        if(!machine->ReadMem(address + i * 4, 4, &val))
+            machine->ReadMem(address + i * 4, 4, &val);
         i++;
     } while (i < MAX_ARG_COUNT && val != 0);
 
@@ -142,7 +154,8 @@ SaveArgs(int address)
         // For each pointer, read the corresponding string.
         ret[j] = new char [MAX_ARG_LENGTH];
         // En val queda la dirección del j-ésimo argumento
-        machine->ReadMem(address + j * 4, 4, &val);
+        if(!machine->ReadMem(address + j * 4, 4, &val))
+            !machine->ReadMem(address + j * 4, 4, &val);
         // Escribo el argumento en ret[j]
         ReadStringFromUser(val, ret[j], MAX_ARG_LENGTH);
     }

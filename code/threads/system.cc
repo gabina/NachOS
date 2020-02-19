@@ -47,6 +47,11 @@ SynchConsole * synchChonsole;
 PostOffice *postOffice;
 #endif
 
+#ifdef USE_TLB
+bool ratio = false;
+int misses;
+int accesses;
+#endif
 // External definition, to allow us to take a pointer to this function.
 extern void Cleanup();
 
@@ -120,7 +125,7 @@ Initialize(int argc, char **argv)
                                             // number generator.
             randomYield = true;
             argCount = 2;
-        }
+        } 
         // 2007, Jose Miguel Santos Espino
         else if (!strcmp(*argv, "-p")) {
             preemptiveScheduling = true;
@@ -131,6 +136,15 @@ Initialize(int argc, char **argv)
                 argCount = 2;
             }
         }
+
+#ifdef USE_TLB
+        if (!strcmp(*argv, "-ratio")){
+            srand (time(NULL));
+            ratio = true;
+            misses = 0;
+            accesses = 0;
+        }
+#endif        
 #ifdef USER_PROGRAM
         if (!strcmp(*argv, "-s"))
             debugUserProg = true;

@@ -109,7 +109,10 @@ AddressSpace::AddressSpace(OpenFile *executable)
       pageTable[i].valid        = true;
       pageTable[i].use          = false;
       pageTable[i].dirty        = false;
-      pageTable[i].readOnly     = false;
+      if (i < numPagesCode)
+        pageTable[i].readOnly = false;
+      else
+        pageTable[i].readOnly     = false;
       // If the code segment was entirely on a separate page, we could
       // set its pages to be read-only.
       /* Inicializo en 0*/  
@@ -204,7 +207,7 @@ void AddressSpace::SaveState()
 /// For now, tell the machine where to find the page table.
 void AddressSpace::RestoreState()
 {
-    machine->pageTable     = pageTable;
-    machine->pageTableSize = numPages;
+    //machine->pageTable     = pageTable;
+    //machine->pageTableSize = numPages;
 }
 

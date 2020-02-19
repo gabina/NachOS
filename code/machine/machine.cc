@@ -59,6 +59,7 @@ Machine::Machine(bool debug)
     for (unsigned i = 0; i < TLB_SIZE; i++)
         tlb[i].valid = false;
     pageTable = NULL;
+    ASSERT(tlb == NULL || pageTable == NULL);
 #else  // Use linear page table.
     tlb = NULL;
     pageTable = NULL;

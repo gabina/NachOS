@@ -8,7 +8,7 @@
 #ifndef NACHOS_THREADS_SYSTEM__HH
 #define NACHOS_THREADS_SYSTEM__HH
 
-
+#include<time.h> 
 #include "utility.hh"
 #include "thread.hh"
 #include "scheduler.hh"
@@ -58,6 +58,12 @@ extern SynchDisk *synchDisk;
 #ifdef NETWORK
 #include "network/post.hh"
 extern PostOffice *postOffice;
+#endif
+
+#ifdef USE_TLB
+extern bool ratio;
+extern int misses;
+extern int accesses;
 #endif
 
 

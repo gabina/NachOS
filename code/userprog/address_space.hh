@@ -41,10 +41,10 @@ public:
     void SaveState();
     void RestoreState();
 
-private:
-
     /// Assume linear page table translation for now!
+    /// It was private
     TranslationEntry *pageTable;
+private:
 
     /// Number of pages in the virtual address space.
     unsigned numPages;

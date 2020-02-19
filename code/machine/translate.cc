@@ -96,6 +96,12 @@ Machine::ReadMem(unsigned addr, unsigned size, int *value)
 
     DEBUG('a', "Reading VA 0x%X, size %u\n", addr, size);
 
+    #ifdef USE_TLB
+    // Cuento un nuevo acceso
+        if(ratio)					
+            accesses ++;
+    #endif
+
     exception = Translate(addr, &physicalAddress, size, false);
     if (exception != NO_EXCEPTION) {
         machine->RaiseException(exception, addr);
@@ -141,6 +147,12 @@ Machine::WriteMem(unsigned addr, unsigned size, int value)
 
     DEBUG('a', "Writing VA 0x%X, size %u, value 0x%X\n", addr, size, value);
 
+    #ifdef USE_TLB
+    // Cuento un nuevo acceso
+        if(ratio)					
+            accesses ++;
+    #endif
+    
     exception = Translate(addr, &physicalAddress, size, true);
     if (exception != NO_EXCEPTION) {
         machine->RaiseException(exception, addr);
@@ -206,7 +218,8 @@ Machine::Translate(unsigned virtAddr, unsigned *physAddr,
     vpn    = (unsigned) virtAddr / PAGE_SIZE;
     offset = (unsigned) virtAddr % PAGE_SIZE;
 
-    if (tlb == NULL) {        // => page table => `vpn` is index into table.
+    if (tlb == NULL) {// => page table => `vpn` is index into table.
+        DEBUG('a', "Tabla de páginas\n");
         if (vpn >= pageTableSize) {
             DEBUG('a',
                   "virtual page # %u too large for page table size %u!\n",
@@ -220,6 +233,7 @@ Machine::Translate(unsigned virtAddr, unsigned *physAddr,
         }
         entry = &pageTable[vpn];
     } else {
+        DEBUG('a', "TLB\n");
         for (entry = NULL, i = 0; i < TLB_SIZE; i++)
             if (tlb[i].valid && tlb[i].virtualPage == vpn) {
                 entry = &tlb[i];  // FOUND!

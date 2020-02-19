@@ -141,6 +141,16 @@ Thread::CheckOverflow()
 void
 Thread::Finish(int stat)
 {
+
+    #ifdef USE_TLB
+        if(ratio){
+            /* Los fallos de página vuelven a acceder a la memoria.
+             *Están contados dos veces */
+            accesses = accesses - misses;
+            int hits = accesses - misses;
+            printf("Accesos %d, Hits %d, Ratio hits %f\n",accesses,hits, (float (hits))/accesses);
+        }
+    #endif
 	/* Aviso que terminé, si se hizo Join */
 	if(join)
 		threadPort->Send(stat);

@@ -102,6 +102,7 @@ PollFile(int fd)
 int
 OpenForWrite(const char *name)
 {
+    printf("%s\n",name);
     int fd = open(name, O_RDWR | O_CREAT | O_TRUNC, 0666);
 
     ASSERT(fd >= 0);
