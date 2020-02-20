@@ -16,7 +16,7 @@
 
 #include "filesys/file_system.hh"
 #include "machine/translation_entry.hh"
-
+#include "bin/noff.h"
 
 const unsigned USER_STACK_SIZE = 1024;  ///< Increase this as necessary!
 
@@ -41,10 +41,25 @@ public:
     void SaveState();
     void RestoreState();
 
+    /// Cara una página a la memoria - Carga por demanda
+    void OnDemand(unsigned virtualPage);
+
     /// Assume linear page table translation for now!
     /// It was private
     TranslationEntry *pageTable;
 private:
+    /// Puntero al ejecutable para poder cargar por demanda
+    OpenFile *exec;
+
+    /// Cabecera del ejecutable. Podría leerse de exec cada vez que sea necesario.
+    /// Pero como representa una lectura de disco a memoria, es lenta y debería evitarse.
+    NoffHeader noffH;
+
+    /// Number of pages - code segment.
+    unsigned numPagesCode;
+
+    /// Number of pages - data segment.
+    unsigned numPagesData;
 
     /// Number of pages in the virtual address space.
     unsigned numPages;

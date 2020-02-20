@@ -74,22 +74,18 @@ ExceptionHandler(ExceptionType which)
 					}
 					break;
 				case SC_Create:{
-					printf("En create\n");
 					int direc = machine->ReadRegister(4);
 					char* nombre = new char [MAX_NAME];
 					ReadStringFromUser(direc, nombre, MAX_NAME);
-					printf("Archivo %s creado\n",nombre);
 					bool ok = fileSystem->Create(nombre, 0);
 					if (!ok)
 						DEBUG('a',"File %s has not been created",nombre);
 					}
 					break;
 				case SC_Open:{
-					printf("Estoy en Open\n");
 					int direc = machine->ReadRegister(4);
 					char* nombre = new char [MAX_NAME];
 					ReadStringFromUser(direc, nombre, MAX_NAME);
-					printf("Archivo %s abierto\n",nombre);
 					OpenFile * openFile = fileSystem->Open(nombre);
 					OpenFileTable* fileTable = currentThread->GetTable();
 					OpenFileId idFile = fileTable->NewOpenFile(openFile);
@@ -143,14 +139,12 @@ ExceptionHandler(ExceptionType which)
 					}
 					break;
 				case SC_Write:{
-					printf("Estoy en Write\n");
 					int buffer = machine->ReadRegister(4);
 					int size = machine->ReadRegister(5);
 					OpenFileId idFile =(OpenFileId) machine->ReadRegister(6);
 					int sizeWritten, i;
 					char * localBuffer = new char [size];	
 					ReadBufferFromUser(buffer, localBuffer, size);
-					printf("Voy a escribir %s \n",localBuffer);
 					if(idFile == 1){
 						for (i = 0; i < size; i++)
 							synchChonsole ->WriteChar(localBuffer[i]);
@@ -269,13 +263,18 @@ ExceptionHandler(ExceptionType which)
 			//unsigned pageTableSize = (currentThread->space)->numPages;
 			TranslationEntry *pageTable = (currentThread->space)->pageTable;
 
-			// Calculate the virtual page number, and offset within the page,
-			// from the virtual address.
+			// Calculate the virtual page number from the virtual address.
 			unsigned vpn    = (unsigned) virtAddr / PAGE_SIZE;
 
 			// Calculo la posición aleatoria del TLB que reemplazaré
 			int i = rand() % TLB_SIZE; 	
 			//printf("%d\n",i);
+
+			/* Si la página no está marcada en la tabla como válida,
+			 * entonces no está cargada en memoria y debo hacerlo*/
+			if (!pageTable[vpn].valid)
+				(currentThread->space)->OnDemand(vpn);
+
 			// Cargo la entrada al TLB
 			(machine->tlb)[i] = pageTable[vpn];			
 			//interrupt->Halt();

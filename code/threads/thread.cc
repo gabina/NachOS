@@ -63,7 +63,7 @@ Thread::~Thread()
     DEBUG('t', "Deleting thread \"%s\"\n", name);
     ASSERT(this != currentThread);
 
-#ifdef USER_PROGRAM    
+#ifdef USER_PROGRAM  
     delete space;
 #endif
     delete threadTable;

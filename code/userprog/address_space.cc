@@ -17,7 +17,6 @@
 
 
 #include "address_space.hh"
-#include "bin/noff.h"
 #include "threads/system.hh"
 
 
@@ -54,11 +53,11 @@ SwapHeader(NoffHeader *noffH)
 ///   memory.
 AddressSpace::AddressSpace(OpenFile *executable)
 {
-  NoffHeader noffH;
-  unsigned   sizeData, sizeCode, numPagesCode, numPagesData, 
-              lastPageBytes, size, sizeZero, numPagesZero;
+  exec = new OpenFile(executable->file);
+  //exec = executable;
+  unsigned   sizeData, sizeCode, lastPageBytes, size, sizeZero, numPagesZero;
 
-  executable->ReadAt((char *) &noffH, sizeof noffH, 0);
+  exec->ReadAt((char *) &noffH, sizeof noffH, 0);
   if (noffH.noffMagic != NOFFMAGIC &&
         WordToHost(noffH.noffMagic) == NOFFMAGIC)
       SwapHeader(&noffH);
@@ -91,7 +90,6 @@ AddressSpace::AddressSpace(OpenFile *executable)
 
 	/* Controlo que el size sea menor o igual a 
    * la cantidad de bytes libres en bitmap*/
-  //ASSERT(size <= bitmap->NumClear());
   ASSERT(numPages <= bitmap->NumClear());
   // no debe explotar todo
     
@@ -108,22 +106,32 @@ AddressSpace::AddressSpace(OpenFile *executable)
   for (unsigned i = 0; i < numPages; i++) {
     DEBUG('a', "Initializing address space, virtual page number %u\n",i);
     pageTable[i].virtualPage  = i;
+
+    /* Al implementar carga por demanda pura, no debo
+     * marcar las páginas como válidas al inicio, ni tampoco
+     * reservar un marco de memoria.  */
+    /*
     pageTable[i].physicalPage = bitmap->Find();
     pageTable[i].valid        = true;
+    */
+    pageTable[i].valid        = false;
     pageTable[i].use          = false;
     pageTable[i].dirty        = false;
     if (i < numPagesCode-1)
-      pageTable[i].readOnly = true;
+      pageTable[i].readOnly   = true;
     else
-      pageTable[i].readOnly     = false;
+      pageTable[i].readOnly   = false;
     // If the code segment was entirely on a separate page, we could
     // set its pages to be read-only.
+    
+    /* Al implementar carga por demanda pura, no debo inicializar*/
     /* Inicializo en 0*/  
-    memset(machine->mainMemory + (pageTable[i].physicalPage)*PAGE_SIZE, 0, PAGE_SIZE);
+    //memset(machine->mainMemory + (pageTable[i].physicalPage)*PAGE_SIZE, 0, PAGE_SIZE);
     DEBUG('a', "Initializing to zero, physical page number %u\n",pageTable[i].physicalPage);    
   }
 
 
+  /* No debo cargar ninguna página.
   // Then, copy in the code and data segments into memory.
   if (noffH.code.size > 0) {
     DEBUG('a', "Initializing code space, num pages %u, size %u\n",
@@ -157,7 +165,7 @@ AddressSpace::AddressSpace(OpenFile *executable)
                         PAGE_SIZE, noffH.initData.inFileAddr + (i-numPagesCode)*PAGE_SIZE);
     } 
   }
-
+  */
 }
 
 /// Deallocate an address space.
@@ -167,7 +175,33 @@ AddressSpace::~AddressSpace()
 {
 	for(unsigned i = 0; i < numPages; i++)
 		bitmap->Clear(pageTable[i].physicalPage);
-    delete [] pageTable;
+  
+  delete [] pageTable;
+  delete exec;
+}
+
+/* Carga la página virtual virtualPage a memoria, si corresponde a
+ * datos o texto. En caso contrario, inicializa en cero. */
+void
+AddressSpace::OnDemand(unsigned virtualPage)
+{
+  // Reservo un marco de memoria
+  int frame = bitmap->Find();
+  ASSERT(frame >= 0);
+  pageTable[virtualPage].physicalPage = frame; 
+  /*Si la página a cargar pertenece al segmento de texto */
+  //printf("Segundo ReadAt\n");
+  if (virtualPage < numPagesCode)
+    exec->ReadAt(&(machine->mainMemory[pageTable[virtualPage].physicalPage*PAGE_SIZE]),
+                PAGE_SIZE, noffH.code.inFileAddr + virtualPage*PAGE_SIZE);
+  else /* Si la página a cargar pertenece al segmento de datos */
+    if (virtualPage < numPagesData + numPagesCode)
+      exec->ReadAt(&(machine->mainMemory[pageTable[virtualPage].physicalPage*PAGE_SIZE]),
+                  PAGE_SIZE, noffH.initData.inFileAddr + (virtualPage-numPagesCode)*PAGE_SIZE);
+    else /* Inicializo en cero */
+      memset(machine->mainMemory + (pageTable[virtualPage].physicalPage)*PAGE_SIZE, 0, PAGE_SIZE);
+  
+  pageTable[virtualPage].valid = true;        
 }
 
 /// Set the initial values for the user-level register set.

@@ -30,7 +30,9 @@ StartProcess(const char *filename)
     space = new AddressSpace(executable);
     currentThread->space = space;
 
-    delete executable;
+    /* No debería cerrar el archivo acá porque no puedo leer las páginas 
+     * al implementar carga por demanda pura */
+    //delete executable;
 
     space->InitRegisters();  // Set the initial register values.
     space->RestoreState();   // Load page table register.

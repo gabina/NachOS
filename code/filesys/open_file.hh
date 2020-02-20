@@ -35,6 +35,8 @@ public:
     ~OpenFile() { Close(file); }
 
     int ReadAt(char *into, unsigned numBytes, unsigned position) {
+        //printf("file %d position %u:",file,position);
+        //printf(" En ReadAt\n");
         Lseek(file, position, 0);
         return ReadPartial(file, into, numBytes);
     }
@@ -56,8 +58,9 @@ public:
 
     unsigned Length() { Lseek(file, 0, 2); return Tell(file); }
 
-private:
+    /* Era privada, pero la necesité para copiar el OpenFile* */
     int file;
+private:
     unsigned currentOffset;
 };
 
