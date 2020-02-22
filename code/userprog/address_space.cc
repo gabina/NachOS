@@ -242,10 +242,13 @@ void AddressSpace::SaveState()
 /// On a context switch, restore the machine state so that this address space
 /// can run.
 ///
-/// For now, tell the machine where to find the page table.
+/// Flush the TLB, setting valid bit in false.
 void AddressSpace::RestoreState()
 {
-    //machine->pageTable     = pageTable;
-    //machine->pageTableSize = numPages;
+  for(unsigned i = 0; i < TLB_SIZE; i++)
+	  machine->tlb[i].valid = false;
+  
+  //machine->pageTable     = pageTable;
+  //machine->pageTableSize = numPages;
 }
 
