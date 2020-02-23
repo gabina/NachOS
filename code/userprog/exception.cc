@@ -253,28 +253,26 @@ ExceptionHandler(ExceptionType which)
 			La nueva entrada debe ser agregada a la TLB*/
 
 			#ifdef USE_TLB
-			// Cuento un nuevo miss
+				// Cuento un nuevo miss
 				if(ratio)					
 					misses ++;
+				// Leo la dirección que produjo la falla
+				int virtAddr = machine->ReadRegister(BAD_VADDR_REG);
+				// Recupero tabla de páginas
+				TranslationEntry *pageTable = (currentThread->space)->pageTable;
+
+				// Calculate the virtual page number from the virtual address.
+				unsigned vpn    = (unsigned) virtAddr / PAGE_SIZE;
+				
+				/* Si la página no está marcada en la tabla como válida,
+				* entonces no está cargada en memoria y debo hacerlo*/
+				if (!pageTable[vpn].valid)
+					(currentThread->space)->OnDemand(vpn);
+
+				// Cargo la entrada al TLB
+				(machine->tlb)[nextEntry] = pageTable[vpn];
+				nextEntry = (nextEntry+1) %	TLB_SIZE;
 			#endif
-			// Leo la dirección que produjo la falla
-			int virtAddr = machine->ReadRegister(BAD_VADDR_REG);
-			// Recupero tabla de páginas
-			TranslationEntry *pageTable = (currentThread->space)->pageTable;
-
-			// Calculate the virtual page number from the virtual address.
-			unsigned vpn    = (unsigned) virtAddr / PAGE_SIZE;
-			
-			// Calculo la posición aleatoria del TLB que reemplazaré
-			int i = rand() % TLB_SIZE; 	
-
-			/* Si la página no está marcada en la tabla como válida,
-			 * entonces no está cargada en memoria y debo hacerlo*/
-			if (!pageTable[vpn].valid)
-				(currentThread->space)->OnDemand(vpn);
-
-			// Cargo la entrada al TLB
-			(machine->tlb)[i] = pageTable[vpn];	
 			}
 			break;
 		case READ_ONLY_EXCEPTION:{

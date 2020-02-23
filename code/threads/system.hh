@@ -64,6 +64,7 @@ extern PostOffice *postOffice;
 extern bool ratio;
 extern int misses;
 extern int accesses;
+extern unsigned nextEntry;
 #endif
 
 

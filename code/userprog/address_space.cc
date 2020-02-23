@@ -246,8 +246,11 @@ void AddressSpace::SaveState()
 /// Flush the TLB, setting valid bit in false.
 void AddressSpace::RestoreState()
 {
-  for(unsigned i = 0; i < TLB_SIZE; i++)
-	  machine->tlb[i].valid = false;
+  #ifdef USE_TLB
+  nextEntry = 0;
+    for(unsigned i = 0; i < TLB_SIZE; i++)
+      machine->tlb[i].valid = false;
+  #endif
   
   //machine->pageTable     = pageTable;
   //machine->pageTableSize = numPages;

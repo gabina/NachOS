@@ -51,6 +51,7 @@ PostOffice *postOffice;
 bool ratio = false;
 int misses;
 int accesses;
+unsigned nextEntry;
 #endif
 // External definition, to allow us to take a pointer to this function.
 extern void Cleanup();
