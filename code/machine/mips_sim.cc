@@ -94,6 +94,7 @@ Machine::OneInstruction(Instruction *instr)
     int      sum, diff, tmp, value;
     unsigned rs, rt, imm;
 
+    //printf("En OneInstruction(%d)\n",instr->opCode);
     // Execute the instruction (cf. Kane's book).
     switch (instr->opCode) {
 

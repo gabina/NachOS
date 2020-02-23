@@ -173,9 +173,10 @@ AddressSpace::AddressSpace(OpenFile *executable)
 /// Nothing for now!
 AddressSpace::~AddressSpace()
 {
-	for(unsigned i = 0; i < numPages; i++)
-		bitmap->Clear(pageTable[i].physicalPage);
-  
+	for(unsigned i = 0; i < numPages; i++){
+    if(pageTable[i].valid)
+      bitmap->Clear(pageTable[i].physicalPage);
+  }
   delete [] pageTable;
   delete exec;
 }
@@ -189,8 +190,8 @@ AddressSpace::OnDemand(unsigned virtualPage)
   int frame = bitmap->Find();
   ASSERT(frame >= 0);
   pageTable[virtualPage].physicalPage = frame; 
+
   /*Si la página a cargar pertenece al segmento de texto */
-  //printf("Segundo ReadAt\n");
   if (virtualPage < numPagesCode)
     exec->ReadAt(&(machine->mainMemory[pageTable[virtualPage].physicalPage*PAGE_SIZE]),
                 PAGE_SIZE, noffH.code.inFileAddr + virtualPage*PAGE_SIZE);
@@ -201,7 +202,7 @@ AddressSpace::OnDemand(unsigned virtualPage)
     else /* Inicializo en cero */
       memset(machine->mainMemory + (pageTable[virtualPage].physicalPage)*PAGE_SIZE, 0, PAGE_SIZE);
   
-  pageTable[virtualPage].valid = true;        
+  pageTable[virtualPage].valid = true;    
 }
 
 /// Set the initial values for the user-level register set.

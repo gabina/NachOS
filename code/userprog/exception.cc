@@ -114,19 +114,19 @@ ExceptionHandler(ExceptionType which)
 						/* Si es 1, devuelvo error*/
 						if(idFile == 1){
 							DEBUG('a',"Error\n");
-							return;
+							currentThread->Finish();
 						}
 						
 						OpenFileTable* fileTable = currentThread->GetTable();
 						if(fileTable == NULL){
-							DEBUG('a',"Error: null pointer\n");
-							return;
+							DEBUG('a'," null pointer\n");
+							currentThread->Finish();
 						}
 						/* A partir del OpenFileId idFile obtengo un puntero a un objeto de OpenFile*/
 						OpenFile* openFile =  fileTable->GetOpenFile(idFile);
 						if(openFile == NULL){
 							DEBUG('a',"Error: null pointer\n");
-							return;
+							currentThread->Finish();
 						}
 						sizeRead = openFile->Read(localBuffer, size);
 					}
@@ -155,14 +155,15 @@ ExceptionHandler(ExceptionType which)
 						if(idFile == 0){
 							DEBUG('a',"Error\n");
 							printf("No entró bien\n");
-							return;
+							currentThread->Finish();
+
 						}
 						OpenFileTable* fileTable = currentThread->GetTable();
 						/* A partir del OpenFile idFile obtengo un puntero a un objeto de OpenFile*/
 						OpenFile* openFile =  fileTable->GetOpenFile(idFile);
 						if(openFile == NULL){
-							DEBUG('a',"Error: null pointer\n");
-							return;
+							DEBUG('a',"Error: null pointer2\n");
+							currentThread->Finish();
 						}
 						sizeWritten = openFile->Write(localBuffer, size);
 					}
@@ -186,7 +187,7 @@ ExceptionHandler(ExceptionType which)
 					SpaceId spaceID = (SpaceId) machine->ReadRegister(4);
 					Thread* t = processTable->GetProcess(spaceID);
 					int s = t->Join();
-					machine->WriteRegister(2, s);				
+					machine->WriteRegister(2, s);	
 					}
 					break;
 				case SC_Exec:{
@@ -217,7 +218,7 @@ ExceptionHandler(ExceptionType which)
 					/* Reservo espacio*/
 					AddressSpace *space;
 					space = new AddressSpace(executable);
-						
+
 					/* Creo el nuevo hilo y asigno el espacio */
 					Port * dadPort = currentThread->GetPort();
 					char* procName = new char [20];
@@ -250,7 +251,6 @@ ExceptionHandler(ExceptionType which)
 			/*La página virtual buscada no está en el TLB. 
 			Debe buscar en la memoria cuál es el marco correspondiente. 
 			La nueva entrada debe ser agregada a la TLB*/
-			//printf("No se encuentra la página en la TLB\n");
 
 			#ifdef USE_TLB
 			// Cuento un nuevo miss
@@ -260,15 +260,13 @@ ExceptionHandler(ExceptionType which)
 			// Leo la dirección que produjo la falla
 			int virtAddr = machine->ReadRegister(BAD_VADDR_REG);
 			// Recupero tabla de páginas
-			//unsigned pageTableSize = (currentThread->space)->numPages;
 			TranslationEntry *pageTable = (currentThread->space)->pageTable;
 
 			// Calculate the virtual page number from the virtual address.
 			unsigned vpn    = (unsigned) virtAddr / PAGE_SIZE;
-
+			
 			// Calculo la posición aleatoria del TLB que reemplazaré
 			int i = rand() % TLB_SIZE; 	
-			//printf("%d\n",i);
 
 			/* Si la página no está marcada en la tabla como válida,
 			 * entonces no está cargada en memoria y debo hacerlo*/
@@ -276,11 +274,15 @@ ExceptionHandler(ExceptionType which)
 				(currentThread->space)->OnDemand(vpn);
 
 			// Cargo la entrada al TLB
-			(machine->tlb)[i] = pageTable[vpn];			
-			//interrupt->Halt();
+			(machine->tlb)[i] = pageTable[vpn];	
 			}
 			break;
 		case READ_ONLY_EXCEPTION:{
+			currentThread->Finish();
+			break;
+		}
+		case ILLEGAL_INSTR_EXCEPTION:{
+			printf("Instrucción ilegal\n");
 			currentThread->Finish();
 			break;
 		}
