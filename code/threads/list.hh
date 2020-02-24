@@ -59,6 +59,9 @@ public:
     /// Apply `func` to all elements in list.
     void Apply(void (*func)(Item));
 
+    /// Como Apply pero con un argumento extra
+    void Apply2(void (*func)(Item,void*), void *arg);
+
     /// Is the list empty?
     bool IsEmpty();
 
@@ -180,6 +183,20 @@ List<Item>::Apply(void (*func)(Item))
 {
     for (ListNode *ptr = first; ptr != NULL; ptr = ptr->next) {
        func(ptr->item);
+    }
+}
+
+/// Apply a function to each item on the list, by walking through the list,
+/// one element at a time.
+///
+/// * `func` is the procedure to apply to each element of the list.
+/// Como Apply pero toma un argumento.
+template <class Item>
+void
+List<Item>::Apply2(void (*func)(Item,void*), void *arg)
+{
+    for (ListNode *ptr = first; ptr != NULL; ptr = ptr->next) {
+       func(ptr->item,arg);
     }
 }
 
