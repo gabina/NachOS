@@ -129,45 +129,23 @@ public:
     /// Intercambia prioridades
     void ChangePriority(int myPrio, int anotherPrio,Thread* anotherThread);
 
-    void setStatus(ThreadStatus st)
-    {
-        status = st;
-    }
-
-    const char *GetName()
-    {
-        return name;
-    }
-
-    void Print()
-    {
-        printf("%s, ", name);
-    }
+    void SetID(SpaceId spaceId);
     
-    int GetPriority()
-    {
-		return priority;
-	}
-	
-    int GetRealPriority()
-    {
-		return realPriority;
-	}	
-	
-	OpenFileTable* GetTable()
-	{
-		return threadTable;
-	}
+    void setStatus(ThreadStatus st);
 
-	SpaceId GetID()
-	{
-		return spaceId;
-	}
+    const char *GetName();
+
+    void Print();
+    
+    int GetPriority();
 	
-	Port* GetPort()
-	{
-		return threadPort;
-	}
+    int GetRealPriority();
+	
+	OpenFileTable* GetTable();
+
+	SpaceId GetID();
+	
+	Port* GetPort();
 private:
     // Some of the private data for this class is listed above.
 

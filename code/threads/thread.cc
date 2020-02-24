@@ -241,6 +241,49 @@ Thread::ChangePriority(int myPrio, int anotherPrio,Thread* anotherThread){
 
 }
 
+void Thread::SetID(SpaceId spaceId) {
+    spaceId = spaceId;
+}
+
+void Thread::setStatus(ThreadStatus st)
+{
+    status = st;
+}
+
+const char *Thread::GetName()
+{
+    return name;
+}
+
+void Thread::Print()
+{
+    printf("%s, ", name);
+}
+
+int Thread::GetPriority()
+{
+    return priority;
+}
+
+int Thread::GetRealPriority()
+{
+    return realPriority;
+}	
+
+OpenFileTable* Thread::GetTable()
+{
+    return threadTable;
+}
+
+SpaceId Thread::GetID()
+{
+    return spaceId;
+}
+
+Port* Thread::GetPort()
+{
+    return threadPort;
+}
 
 /* Para hacer: 
  * Thread * t = new Thread("Hijo");

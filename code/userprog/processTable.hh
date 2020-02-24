@@ -1,9 +1,11 @@
+#ifndef NACHOS_USERPROG_PROCESSTABLE__HH
+#define NACHOS_USERPROG_PROCESSTABLE__HH
+
 #define MAX_PROCESS 50 /// Cantidad máxima de procesos
 
 #include "syscall.h"
 #include "../threads/list.hh"
-
-class Thread;
+#include "../threads/thread.hh"
 
 class ProcessTable {
 public:
@@ -30,3 +32,5 @@ private:
 	SpaceId nextId;
 	List<SpaceId> *freeId;
 };
+
+#endif
