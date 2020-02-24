@@ -262,7 +262,7 @@ ExceptionHandler(ExceptionType which)
 				TranslationEntry *pageTable = (currentThread->space)->pageTable;
 
 				// Calculate the virtual page number from the virtual address.
-				unsigned vpn    = (unsigned) virtAddr / PAGE_SIZE;
+				unsigned vpn = (unsigned) virtAddr / PAGE_SIZE;
 				
 				/* Si la página no está marcada en la tabla como válida,
 				* entonces no está cargada en memoria y debo hacerlo*/

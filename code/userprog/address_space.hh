@@ -41,7 +41,7 @@ public:
     void SaveState();
     void RestoreState();
 
-    /// Cara una página a la memoria - Carga por demanda
+    /// Carga una página a la memoria - Carga por demanda
     void OnDemand(unsigned virtualPage);
 
     /// Assume linear page table translation for now!

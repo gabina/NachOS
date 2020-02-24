@@ -25,7 +25,8 @@
 		if(!freeId->IsEmpty()){
 			SpaceId spaceId = freeId->Remove();
 			table[spaceId] = newThread;
-			return spaceId;	
+			newThread->SetID(spaceId);
+			return spaceId;
 		}
 		else{
 			/* Si ya abrí la cantidad máxima de procesos, aviso y retorno -1 */
@@ -36,6 +37,7 @@
 			/* Utilizo el nextId */
 				table[nextId] = newThread;
 				nextId ++;
+				newThread->SetID(nextId - 1);
 				return nextId - 1;
 			}
 		}
