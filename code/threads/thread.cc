@@ -67,7 +67,7 @@ Thread::~Thread()
 
     #ifdef VMEM
     //Elimino el proceso de la FIFO
-    deleteVictims(victims,spaceId);
+    DeleteVictims(victims,spaceId);
     //Cierro el archivo del SWAP
     if(swap!=NULL)
         delete swap;
@@ -261,8 +261,8 @@ Thread::ChangePriority(int myPrio, int anotherPrio,Thread* anotherThread){
 
 }
 
-void Thread::SetID(SpaceId spaceId) {
-    spaceId = spaceId;
+void Thread::SetID(SpaceId newSpaceId) {
+    spaceId = newSpaceId;
 }
 
 void Thread::setStatus(ThreadStatus st)

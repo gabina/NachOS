@@ -16,9 +16,9 @@ typedef struct _Victim {
 void DeleteID(Victim *v, void *arg);
 
 // para borrar todas las victimas correspondientes a un process
-void DeleteVictims(List<Victim*> victims, SpaceId process);
+void DeleteVictims(List<Victim*> *victims, SpaceId process);
 
-// Retorna la próxima víctica
-Victim GiveVictim(List<Victim*> victims);
+// Retorna la próxima víctima
+Victim *GiveVictim(List<Victim*> *victims);
 
 #endif

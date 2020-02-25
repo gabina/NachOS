@@ -156,7 +156,6 @@ ExceptionHandler(ExceptionType which)
 							DEBUG('a',"Error\n");
 							printf("No entró bien\n");
 							currentThread->Finish();
-
 						}
 						OpenFileTable* fileTable = currentThread->GetTable();
 						/* A partir del OpenFile idFile obtengo un puntero a un objeto de OpenFile*/
@@ -231,7 +230,7 @@ ExceptionHandler(ExceptionType which)
 					#ifdef VMEM
 					// Creo el archivo SWAP
 					char* fileName = new char [20];
-					snprintf(fileName, 20, "SWAP._%d", (int) (t->spaceId));
+					snprintf(fileName, 20, "SWAP._%d", (int) (t->GetID()));
 					if(!fileSystem->Create(fileName, 0)){
 						printf("Error al crear archivo del SWAP\n");
 						ASSERT(false);
@@ -279,32 +278,31 @@ ExceptionHandler(ExceptionType which)
 				* entonces no está cargada en memoria y debo hacerlo*/
 				if (!pageTable[vpn].valid){
 					printf("La página no está cargada en memoria\n");
-					printf("%u\n",bitmap->NumClear());
 					#ifdef VMEM
-					printf("hola\n");
 					/* Si no hay marcos de memoria física disponibles*/
 					if(bitmap->NumClear() == 0){
-						printf("Hola\n");
+						printf("Voy a hacer swap\n");
 						Victim *victim = GiveVictim(victims);
-						Thread *thread = GetProcess(victim->process);
-						TranslationEntry* pageTable = (thread->space)->pageTable;
-						unsigned physicalPage = pageTable[victim->virtualPage];
+						Thread *thread = processTable->GetProcess(victim->process);
+						TranslationEntry* victimPageTable = (thread->space)->pageTable;
+						unsigned physicalPage = victimPageTable[victim->virtualPage].physicalPage;
 						//TO DO: copiar la página en el archivo correspondiente y liberarla
 
 						//Abrir el archivo si aún no está abierto
 						if(thread->swap==NULL){
 							char* fileName = new char [20];
-							snprintf(fileName, 20, "SWAP._%d", (int) (thread->spaceId));
+							snprintf(fileName, 20, "SWAP._%d", (int) (thread->GetID()));
 							thread->swap = fileSystem->Open(fileName);
 							delete fileName;
 						}
 						int block = PAGE_SIZE*(victim->virtualPage);
+						printf("Virtual page: %d\n",victim->virtualPage);
 						(thread->swap)->WriteAt(&(machine->mainMemory[physicalPage]),
 												PAGE_SIZE,block);
-						bitMap->Clear(physicalPage);
+						bitmap->Clear(physicalPage);
 					}
 					Victim *newVictim = new Victim;
-					newVictim->process = currentThread->GetSpaceId();
+					newVictim->process = currentThread->GetID();
 					newVictim->virtualPage = vpn; 
 					victims->Append(newVictim);
 					#endif

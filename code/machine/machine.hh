@@ -33,9 +33,9 @@ const unsigned PAGE_SIZE = SECTOR_SIZE;  ///< Set the page size equal to the
                                          ///< simplicity.
 //Cambio el número de páginas físicas para probar
 //const unsigned NUM_PHYS_PAGES = 32;
-const unsigned NUM_PHYS_PAGES = 32;
+const unsigned NUM_PHYS_PAGES = 4;
 const unsigned MEMORY_SIZE = NUM_PHYS_PAGES * PAGE_SIZE;
-const unsigned TLB_SIZE = 8;  ///< if there is a TLB, make it small.
+const unsigned TLB_SIZE = 2;  ///< if there is a TLB, make it small.
 
 enum ExceptionType {
     NO_EXCEPTION,             // Everything ok!

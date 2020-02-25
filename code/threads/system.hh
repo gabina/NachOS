@@ -68,6 +68,7 @@ extern unsigned nextEntry;
 #endif
 
 #ifdef VMEM
+#include "vmem/paging.hh"
 extern List<Victim*> *victims;
 #endif
 

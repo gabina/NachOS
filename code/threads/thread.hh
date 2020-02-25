@@ -129,7 +129,7 @@ public:
     /// Intercambia prioridades
     void ChangePriority(int myPrio, int anotherPrio,Thread* anotherThread);
 
-    void SetID(SpaceId spaceId);
+    void SetID(SpaceId newSpaceId);
     
     void setStatus(ThreadStatus st);
 
@@ -146,6 +146,11 @@ public:
 	SpaceId GetID();
 	
 	Port* GetPort();
+
+    #ifdef VMEM
+    /// El descriptor del archivo donde se hará el swap, correspondiente al address space.
+    OpenFile *swap;
+    #endif
 private:
     // Some of the private data for this class is listed above.
 
@@ -180,11 +185,6 @@ private:
 	
 	///ID 
 	SpaceId spaceId;
-
-#ifdef VMEM
-    /// El descriptor del archivo donde se hará el swap, correspondiente al address space.
-    OpenFile *swap;
-#endif
 
 #ifdef USER_PROGRAM
     /// User-level CPU register state.

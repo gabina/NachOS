@@ -17,9 +17,9 @@ DEFINES      = -DUSER_PROGRAM  -DFILESYS_NEEDED -DFILESYS_STUB -DVMEM \
                -DUSE_TLB -DDFS_TICKS_FIX
 INCLUDE_DIRS = -I.. -I../filesys -I../bin -I../userprog -I../threads \
                -I../machine
-HFILES       = $(THREAD_H) $(USERPROG_H) $(VMEM_H)
-CFILES       = $(THREAD_C) $(USERPROG_C) $(VMEM_C)
-C_OFILES     = $(THREAD_O) $(USERPROG_O) $(VMEM_O)
+HFILES       = $(VMEM_H) $(THREAD_H) $(USERPROG_H)
+CFILES       = $(VMEM_C) $(THREAD_C) $(USERPROG_C)
+C_OFILES     = $(VMEM_O) $(THREAD_O) $(USERPROG_O)
 
 # If filesystem is done first!
 #DEFINES      = -DUSER_PROGRAM -DFILESYS_NEEDED -DFILESYS -DVMEM -DUSE_TLB
