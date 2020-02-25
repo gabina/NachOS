@@ -54,7 +54,6 @@ SwapHeader(NoffHeader *noffH)
 AddressSpace::AddressSpace(OpenFile *executable)
 {
   exec = new OpenFile(executable->file);
-  //exec = executable;
   unsigned   sizeData, sizeCode, lastPageBytes, size, sizeZero, numPagesZero;
 
   exec->ReadAt((char *) &noffH, sizeof noffH, 0);
@@ -90,7 +89,7 @@ AddressSpace::AddressSpace(OpenFile *executable)
 
 	/* Controlo que el size sea menor o igual a 
    * la cantidad de bytes libres en bitmap*/
-  ASSERT(numPages <= bitmap->NumClear());
+  //ASSERT(numPages <= bitmap->NumClear());
   // no debe explotar todo
     
   // Check we are not trying to run anything too big -- at least until we
@@ -110,10 +109,6 @@ AddressSpace::AddressSpace(OpenFile *executable)
     /* Al implementar carga por demanda pura, no debo
      * marcar las páginas como válidas al inicio, ni tampoco
      * reservar un marco de memoria.  */
-    /*
-    pageTable[i].physicalPage = bitmap->Find();
-    pageTable[i].valid        = true;
-    */
     pageTable[i].valid        = false;
     pageTable[i].use          = false;
     pageTable[i].dirty        = false;
@@ -129,43 +124,6 @@ AddressSpace::AddressSpace(OpenFile *executable)
     //memset(machine->mainMemory + (pageTable[i].physicalPage)*PAGE_SIZE, 0, PAGE_SIZE);
     DEBUG('a', "Initializing to zero, physical page number %u\n",pageTable[i].physicalPage);    
   }
-
-
-  /* No debo cargar ninguna página.
-  // Then, copy in the code and data segments into memory.
-  if (noffH.code.size > 0) {
-    DEBUG('a', "Initializing code space, num pages %u, size %u\n",
-      numPagesCode, sizeCode);
-
-    //Copio las páginas completas
-    for (unsigned i = 0; i < numPagesCode-1; i++){
-      DEBUG('a', "Initializing code segment, at 0x%X, size %u\n",
-          pageTable[i].physicalPage*PAGE_SIZE, PAGE_SIZE); 
-      DEBUG('a',"Reading from 0x%X\n",noffH.code.inFileAddr + i*PAGE_SIZE);
-      executable->ReadAt(&(machine->mainMemory[pageTable[i].physicalPage*PAGE_SIZE]),
-                          PAGE_SIZE, noffH.code.inFileAddr + i*PAGE_SIZE);
-    }
-    // Copio la última página  
-    DEBUG('a', "Initializing code segment - last page, at 0x%X, size %u\n",
-          pageTable[numPagesCode-1].physicalPage*PAGE_SIZE, lastPageBytes); 
-    executable->ReadAt(&(machine->mainMemory[pageTable[numPagesCode-1].physicalPage*PAGE_SIZE]),
-                      lastPageBytes, noffH.code.inFileAddr + (numPagesCode-1)*PAGE_SIZE);    
-
-  }
-
-  if (noffH.initData.size > 0) {
-    DEBUG('a', "Initializing data space, num pages %u, size %u\n",
-      numPagesData, sizeData);
-        // Copio las páginas. Quizás alguna quede con un final que no va. Improta?
-    for (unsigned i = numPagesCode; i < (numPages - numPagesZero); i++){
-      DEBUG('a', "Initializing data segment, at 0x%X, size %u\n",
-        pageTable[i].physicalPage*PAGE_SIZE, PAGE_SIZE); 
-      DEBUG('a',"Reading from 0x%X\n",noffH.code.inFileAddr + (i-numPagesCode)*PAGE_SIZE);
-      executable->ReadAt(&(machine->mainMemory[pageTable[i].physicalPage*PAGE_SIZE]),
-                        PAGE_SIZE, noffH.initData.inFileAddr + (i-numPagesCode)*PAGE_SIZE);
-    } 
-  }
-  */
 }
 
 /// Deallocate an address space.

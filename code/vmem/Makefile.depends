@@ -51,19 +51,24 @@ main.o: ../threads/main.cc /usr/include/stdc-predef.h \
  /usr/lib/gcc/x86_64-linux-gnu/7/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/strings.h ../threads/system.hh ../threads/thread.hh \
- ../threads/../userprog/openFileTable.hh ../threads/../userprog/syscall.h \
+ /usr/include/strings.h ../threads/system.hh /usr/include/time.h \
+ /usr/include/x86_64-linux-gnu/bits/time.h \
+ /usr/include/x86_64-linux-gnu/bits/timex.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
+ ../threads/thread.hh ../threads/../userprog/openFileTable.hh \
+ ../threads/../userprog/syscall.h \
  ../threads/../userprog/../threads/list.hh \
  ../threads/../userprog/../threads/utility.hh ../machine/machine.hh \
  ../machine/disk.hh ../threads/utility.hh ../machine/translation_entry.hh \
  ../threads/utility.hh ../userprog/address_space.hh \
  ../filesys/file_system.hh ../filesys/open_file.hh \
- ../machine/translation_entry.hh ../threads/scheduler.hh \
+ ../machine/translation_entry.hh ../bin/noff.h ../threads/scheduler.hh \
  ../threads/list.hh ../userprog/bitmap.hh ../filesys/open_file.hh \
  ../machine/interrupt.hh ../threads/list.hh ../machine/statistics.hh \
  ../machine/timer.hh ../userprog/processTable.hh ../userprog/syscall.h \
- ../userprog/../threads/list.hh ../userprog/synch_console.hh \
- ../threads/synch.hh ../machine/console.hh
+ ../userprog/../threads/list.hh ../userprog/../threads/thread.hh \
+ ../userprog/synch_console.hh ../threads/synch.hh ../machine/console.hh
 scheduler.o: ../threads/scheduler.cc /usr/include/stdc-predef.h \
  ../threads/scheduler.hh ../threads/list.hh ../threads/utility.hh \
  ../machine/system_dep.hh /usr/include/c++/7/stdlib.h \
@@ -124,12 +129,16 @@ scheduler.o: ../threads/scheduler.cc /usr/include/stdc-predef.h \
  ../machine/disk.hh ../threads/utility.hh ../machine/translation_entry.hh \
  ../threads/utility.hh ../userprog/address_space.hh \
  ../filesys/file_system.hh ../filesys/open_file.hh \
- ../machine/translation_entry.hh ../threads/system.hh \
+ ../machine/translation_entry.hh ../bin/noff.h ../threads/system.hh \
+ /usr/include/time.h /usr/include/x86_64-linux-gnu/bits/time.h \
+ /usr/include/x86_64-linux-gnu/bits/timex.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
  ../userprog/bitmap.hh ../filesys/open_file.hh ../machine/interrupt.hh \
  ../threads/list.hh ../machine/statistics.hh ../machine/timer.hh \
  ../userprog/processTable.hh ../userprog/syscall.h \
- ../userprog/../threads/list.hh ../userprog/synch_console.hh \
- ../threads/synch.hh ../machine/console.hh
+ ../userprog/../threads/list.hh ../userprog/../threads/thread.hh \
+ ../userprog/synch_console.hh ../threads/synch.hh ../machine/console.hh
 synch.o: ../threads/synch.cc /usr/include/stdc-predef.h \
  ../threads/synch.hh ../threads/list.hh ../threads/utility.hh \
  ../machine/system_dep.hh /usr/include/c++/7/stdlib.h \
@@ -190,39 +199,50 @@ synch.o: ../threads/synch.cc /usr/include/stdc-predef.h \
  ../machine/disk.hh ../threads/utility.hh ../machine/translation_entry.hh \
  ../threads/utility.hh ../userprog/address_space.hh \
  ../filesys/file_system.hh ../filesys/open_file.hh \
- ../machine/translation_entry.hh ../threads/system.hh \
+ ../machine/translation_entry.hh ../bin/noff.h ../threads/system.hh \
+ /usr/include/time.h /usr/include/x86_64-linux-gnu/bits/time.h \
+ /usr/include/x86_64-linux-gnu/bits/timex.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
  ../threads/scheduler.hh ../userprog/bitmap.hh ../filesys/open_file.hh \
  ../machine/interrupt.hh ../threads/list.hh ../machine/statistics.hh \
  ../machine/timer.hh ../userprog/processTable.hh ../userprog/syscall.h \
- ../userprog/../threads/list.hh ../userprog/synch_console.hh \
- ../threads/synch.hh ../machine/console.hh
+ ../userprog/../threads/list.hh ../userprog/../threads/thread.hh \
+ ../userprog/synch_console.hh ../threads/synch.hh ../machine/console.hh
 system.o: ../threads/system.cc /usr/include/stdc-predef.h \
- ../threads/system.hh ../threads/utility.hh ../machine/system_dep.hh \
- /usr/include/c++/7/stdlib.h /usr/include/c++/7/cstdlib \
- /usr/include/x86_64-linux-gnu/c++/7/bits/c++config.h \
- /usr/include/x86_64-linux-gnu/c++/7/bits/os_defines.h \
- /usr/include/features.h /usr/include/x86_64-linux-gnu/sys/cdefs.h \
+ ../threads/system.hh /usr/include/time.h /usr/include/features.h \
+ /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
  /usr/include/x86_64-linux-gnu/bits/long-double.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
+ /usr/lib/gcc/x86_64-linux-gnu/7/include/stddef.h \
+ /usr/include/x86_64-linux-gnu/bits/time.h \
+ /usr/include/x86_64-linux-gnu/bits/types.h \
+ /usr/include/x86_64-linux-gnu/bits/typesizes.h \
+ /usr/include/x86_64-linux-gnu/bits/timex.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
+ /usr/include/x86_64-linux-gnu/bits/types/clock_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h \
+ /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
+ /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
+ ../threads/utility.hh ../machine/system_dep.hh \
+ /usr/include/c++/7/stdlib.h /usr/include/c++/7/cstdlib \
+ /usr/include/x86_64-linux-gnu/c++/7/bits/c++config.h \
+ /usr/include/x86_64-linux-gnu/c++/7/bits/os_defines.h \
  /usr/include/x86_64-linux-gnu/c++/7/bits/cpu_defines.h \
  /usr/include/stdlib.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
- /usr/lib/gcc/x86_64-linux-gnu/7/include/stddef.h \
  /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
  /usr/include/x86_64-linux-gnu/bits/floatn.h \
  /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
- /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
  /usr/include/x86_64-linux-gnu/sys/types.h \
- /usr/include/x86_64-linux-gnu/bits/types.h \
- /usr/include/x86_64-linux-gnu/bits/typesizes.h \
- /usr/include/x86_64-linux-gnu/bits/types/clock_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h /usr/include/endian.h \
  /usr/include/x86_64-linux-gnu/bits/endian.h \
  /usr/include/x86_64-linux-gnu/bits/byteswap.h \
@@ -232,8 +252,6 @@ system.o: ../threads/system.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/select.h \
  /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
- /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h \
  /usr/include/x86_64-linux-gnu/sys/sysmacros.h \
  /usr/include/x86_64-linux-gnu/bits/sysmacros.h \
  /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h \
@@ -256,12 +274,13 @@ system.o: ../threads/system.cc /usr/include/stdc-predef.h \
  ../machine/disk.hh ../threads/utility.hh ../machine/translation_entry.hh \
  ../threads/utility.hh ../userprog/address_space.hh \
  ../filesys/file_system.hh ../filesys/open_file.hh \
- ../machine/translation_entry.hh ../threads/scheduler.hh \
+ ../machine/translation_entry.hh ../bin/noff.h ../threads/scheduler.hh \
  ../threads/list.hh ../userprog/bitmap.hh ../filesys/open_file.hh \
  ../machine/interrupt.hh ../threads/list.hh ../machine/statistics.hh \
  ../machine/timer.hh ../userprog/processTable.hh ../userprog/syscall.h \
- ../userprog/../threads/list.hh ../userprog/synch_console.hh \
- ../threads/synch.hh ../machine/console.hh ../threads/preemptive.hh
+ ../userprog/../threads/list.hh ../userprog/../threads/thread.hh \
+ ../userprog/synch_console.hh ../threads/synch.hh ../machine/console.hh \
+ ../threads/preemptive.hh
 thread.o: ../threads/thread.cc /usr/include/stdc-predef.h \
  ../threads/thread.hh ../threads/utility.hh ../machine/system_dep.hh \
  /usr/include/c++/7/stdlib.h /usr/include/c++/7/cstdlib \
@@ -322,13 +341,18 @@ thread.o: ../threads/thread.cc /usr/include/stdc-predef.h \
  ../machine/disk.hh ../threads/utility.hh ../machine/translation_entry.hh \
  ../threads/utility.hh ../userprog/address_space.hh \
  ../filesys/file_system.hh ../filesys/open_file.hh \
- ../machine/translation_entry.hh ../threads/switch.h ../threads/synch.hh \
- ../threads/list.hh ../threads/system.hh ../threads/scheduler.hh \
- ../userprog/bitmap.hh ../filesys/open_file.hh ../machine/interrupt.hh \
- ../threads/list.hh ../machine/statistics.hh ../machine/timer.hh \
- ../userprog/processTable.hh ../userprog/syscall.h \
- ../userprog/../threads/list.hh ../userprog/synch_console.hh \
- ../threads/synch.hh ../machine/console.hh ../machine/machine.hh
+ ../machine/translation_entry.hh ../bin/noff.h ../threads/switch.h \
+ ../threads/synch.hh ../threads/list.hh ../threads/system.hh \
+ /usr/include/time.h /usr/include/x86_64-linux-gnu/bits/time.h \
+ /usr/include/x86_64-linux-gnu/bits/timex.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
+ ../threads/scheduler.hh ../userprog/bitmap.hh ../filesys/open_file.hh \
+ ../machine/interrupt.hh ../threads/list.hh ../machine/statistics.hh \
+ ../machine/timer.hh ../userprog/processTable.hh ../userprog/syscall.h \
+ ../userprog/../threads/list.hh ../userprog/../threads/thread.hh \
+ ../userprog/synch_console.hh ../threads/synch.hh ../machine/console.hh \
+ ../machine/machine.hh
 utility.o: ../threads/utility.cc /usr/include/stdc-predef.h \
  ../threads/utility.hh ../machine/system_dep.hh \
  /usr/include/c++/7/stdlib.h /usr/include/c++/7/cstdlib \
@@ -384,32 +408,39 @@ utility.o: ../threads/utility.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/strings.h
 thread_test.o: ../threads/thread_test.cc /usr/include/stdc-predef.h \
- ../threads/system.hh ../threads/utility.hh ../machine/system_dep.hh \
- /usr/include/c++/7/stdlib.h /usr/include/c++/7/cstdlib \
- /usr/include/x86_64-linux-gnu/c++/7/bits/c++config.h \
- /usr/include/x86_64-linux-gnu/c++/7/bits/os_defines.h \
- /usr/include/features.h /usr/include/x86_64-linux-gnu/sys/cdefs.h \
+ ../threads/system.hh /usr/include/time.h /usr/include/features.h \
+ /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
  /usr/include/x86_64-linux-gnu/bits/long-double.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
+ /usr/lib/gcc/x86_64-linux-gnu/7/include/stddef.h \
+ /usr/include/x86_64-linux-gnu/bits/time.h \
+ /usr/include/x86_64-linux-gnu/bits/types.h \
+ /usr/include/x86_64-linux-gnu/bits/typesizes.h \
+ /usr/include/x86_64-linux-gnu/bits/timex.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
+ /usr/include/x86_64-linux-gnu/bits/types/clock_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h \
+ /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
+ /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
+ ../threads/utility.hh ../machine/system_dep.hh \
+ /usr/include/c++/7/stdlib.h /usr/include/c++/7/cstdlib \
+ /usr/include/x86_64-linux-gnu/c++/7/bits/c++config.h \
+ /usr/include/x86_64-linux-gnu/c++/7/bits/os_defines.h \
  /usr/include/x86_64-linux-gnu/c++/7/bits/cpu_defines.h \
  /usr/include/stdlib.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
- /usr/lib/gcc/x86_64-linux-gnu/7/include/stddef.h \
  /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
  /usr/include/x86_64-linux-gnu/bits/floatn.h \
  /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
- /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
  /usr/include/x86_64-linux-gnu/sys/types.h \
- /usr/include/x86_64-linux-gnu/bits/types.h \
- /usr/include/x86_64-linux-gnu/bits/typesizes.h \
- /usr/include/x86_64-linux-gnu/bits/types/clock_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h /usr/include/endian.h \
  /usr/include/x86_64-linux-gnu/bits/endian.h \
  /usr/include/x86_64-linux-gnu/bits/byteswap.h \
@@ -419,8 +450,6 @@ thread_test.o: ../threads/thread_test.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/select.h \
  /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
- /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h \
  /usr/include/x86_64-linux-gnu/sys/sysmacros.h \
  /usr/include/x86_64-linux-gnu/bits/sysmacros.h \
  /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h \
@@ -443,12 +472,13 @@ thread_test.o: ../threads/thread_test.cc /usr/include/stdc-predef.h \
  ../machine/disk.hh ../threads/utility.hh ../machine/translation_entry.hh \
  ../threads/utility.hh ../userprog/address_space.hh \
  ../filesys/file_system.hh ../filesys/open_file.hh \
- ../machine/translation_entry.hh ../threads/scheduler.hh \
+ ../machine/translation_entry.hh ../bin/noff.h ../threads/scheduler.hh \
  ../threads/list.hh ../userprog/bitmap.hh ../filesys/open_file.hh \
  ../machine/interrupt.hh ../threads/list.hh ../machine/statistics.hh \
  ../machine/timer.hh ../userprog/processTable.hh ../userprog/syscall.h \
- ../userprog/../threads/list.hh ../userprog/synch_console.hh \
- ../threads/synch.hh ../machine/console.hh ../threads/synch.hh
+ ../userprog/../threads/list.hh ../userprog/../threads/thread.hh \
+ ../userprog/synch_console.hh ../threads/synch.hh ../machine/console.hh \
+ ../threads/synch.hh
 openFileTable.o: ../userprog/openFileTable.cc /usr/include/stdc-predef.h \
  ../userprog/openFileTable.hh ../userprog/syscall.h \
  ../userprog/../threads/list.hh ../userprog/../threads/utility.hh \
@@ -559,18 +589,23 @@ interrupt.o: ../machine/interrupt.cc /usr/include/stdc-predef.h \
  /usr/lib/gcc/x86_64-linux-gnu/7/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/strings.h ../threads/system.hh ../threads/thread.hh \
- ../threads/../userprog/openFileTable.hh ../threads/../userprog/syscall.h \
+ /usr/include/strings.h ../threads/system.hh /usr/include/time.h \
+ /usr/include/x86_64-linux-gnu/bits/time.h \
+ /usr/include/x86_64-linux-gnu/bits/timex.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
+ ../threads/thread.hh ../threads/../userprog/openFileTable.hh \
+ ../threads/../userprog/syscall.h \
  ../threads/../userprog/../threads/list.hh ../machine/machine.hh \
  ../machine/disk.hh ../threads/utility.hh ../machine/translation_entry.hh \
  ../threads/utility.hh ../userprog/address_space.hh \
  ../filesys/file_system.hh ../filesys/open_file.hh \
- ../machine/translation_entry.hh ../threads/scheduler.hh \
+ ../machine/translation_entry.hh ../bin/noff.h ../threads/scheduler.hh \
  ../threads/list.hh ../userprog/bitmap.hh ../filesys/open_file.hh \
  ../machine/interrupt.hh ../machine/statistics.hh ../machine/timer.hh \
  ../userprog/processTable.hh ../userprog/syscall.h \
- ../userprog/../threads/list.hh ../userprog/synch_console.hh \
- ../threads/synch.hh ../machine/console.hh \
+ ../userprog/../threads/list.hh ../userprog/../threads/thread.hh \
+ ../userprog/synch_console.hh ../threads/synch.hh ../machine/console.hh \
  /usr/lib/gcc/x86_64-linux-gnu/7/include-fixed/limits.h \
  /usr/lib/gcc/x86_64-linux-gnu/7/include-fixed/syslimits.h \
  /usr/include/limits.h /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
@@ -633,19 +668,24 @@ system_dep.o: ../machine/system_dep.cc /usr/include/stdc-predef.h \
  /usr/lib/gcc/x86_64-linux-gnu/7/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/strings.h ../threads/system.hh ../threads/thread.hh \
- ../threads/../userprog/openFileTable.hh ../threads/../userprog/syscall.h \
+ /usr/include/strings.h ../threads/system.hh /usr/include/time.h \
+ /usr/include/x86_64-linux-gnu/bits/time.h \
+ /usr/include/x86_64-linux-gnu/bits/timex.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
+ ../threads/thread.hh ../threads/../userprog/openFileTable.hh \
+ ../threads/../userprog/syscall.h \
  ../threads/../userprog/../threads/list.hh ../machine/machine.hh \
  ../machine/disk.hh ../threads/utility.hh ../machine/translation_entry.hh \
  ../threads/utility.hh ../userprog/address_space.hh \
  ../filesys/file_system.hh ../filesys/open_file.hh \
- ../machine/translation_entry.hh ../threads/scheduler.hh \
+ ../machine/translation_entry.hh ../bin/noff.h ../threads/scheduler.hh \
  ../threads/list.hh ../userprog/bitmap.hh ../filesys/open_file.hh \
  ../machine/interrupt.hh ../machine/statistics.hh ../machine/timer.hh \
  ../userprog/processTable.hh ../userprog/syscall.h \
- ../userprog/../threads/list.hh ../userprog/synch_console.hh \
- ../threads/synch.hh ../machine/console.hh /usr/include/signal.h \
- /usr/include/x86_64-linux-gnu/bits/signum.h \
+ ../userprog/../threads/list.hh ../userprog/../threads/thread.hh \
+ ../userprog/synch_console.hh ../threads/synch.hh ../machine/console.hh \
+ /usr/include/signal.h /usr/include/x86_64-linux-gnu/bits/signum.h \
  /usr/include/x86_64-linux-gnu/bits/signum-generic.h \
  /usr/include/x86_64-linux-gnu/bits/types/sig_atomic_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/siginfo_t.h \
@@ -799,47 +839,58 @@ timer.o: ../machine/timer.cc /usr/include/stdc-predef.h \
  /usr/lib/gcc/x86_64-linux-gnu/7/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/strings.h ../threads/system.hh ../threads/utility.hh \
- ../threads/thread.hh ../threads/../userprog/openFileTable.hh \
- ../threads/../userprog/syscall.h \
+ /usr/include/strings.h ../threads/system.hh /usr/include/time.h \
+ /usr/include/x86_64-linux-gnu/bits/time.h \
+ /usr/include/x86_64-linux-gnu/bits/timex.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
+ ../threads/utility.hh ../threads/thread.hh \
+ ../threads/../userprog/openFileTable.hh ../threads/../userprog/syscall.h \
  ../threads/../userprog/../threads/list.hh \
  ../threads/../userprog/../threads/utility.hh ../machine/machine.hh \
  ../machine/disk.hh ../threads/utility.hh ../machine/translation_entry.hh \
  ../userprog/address_space.hh ../filesys/file_system.hh \
- ../filesys/open_file.hh ../machine/translation_entry.hh \
+ ../filesys/open_file.hh ../machine/translation_entry.hh ../bin/noff.h \
  ../threads/scheduler.hh ../threads/list.hh ../userprog/bitmap.hh \
  ../filesys/open_file.hh ../machine/interrupt.hh ../threads/list.hh \
  ../machine/statistics.hh ../machine/timer.hh ../userprog/processTable.hh \
  ../userprog/syscall.h ../userprog/../threads/list.hh \
- ../userprog/synch_console.hh ../threads/synch.hh ../machine/console.hh
+ ../userprog/../threads/thread.hh ../userprog/synch_console.hh \
+ ../threads/synch.hh ../machine/console.hh
 preemptive.o: ../threads/preemptive.cc /usr/include/stdc-predef.h \
- ../threads/preemptive.hh ../threads/system.hh ../threads/utility.hh \
- ../machine/system_dep.hh /usr/include/c++/7/stdlib.h \
- /usr/include/c++/7/cstdlib \
- /usr/include/x86_64-linux-gnu/c++/7/bits/c++config.h \
- /usr/include/x86_64-linux-gnu/c++/7/bits/os_defines.h \
+ ../threads/preemptive.hh ../threads/system.hh /usr/include/time.h \
  /usr/include/features.h /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
  /usr/include/x86_64-linux-gnu/bits/long-double.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
+ /usr/lib/gcc/x86_64-linux-gnu/7/include/stddef.h \
+ /usr/include/x86_64-linux-gnu/bits/time.h \
+ /usr/include/x86_64-linux-gnu/bits/types.h \
+ /usr/include/x86_64-linux-gnu/bits/typesizes.h \
+ /usr/include/x86_64-linux-gnu/bits/timex.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
+ /usr/include/x86_64-linux-gnu/bits/types/clock_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h \
+ /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
+ /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
+ ../threads/utility.hh ../machine/system_dep.hh \
+ /usr/include/c++/7/stdlib.h /usr/include/c++/7/cstdlib \
+ /usr/include/x86_64-linux-gnu/c++/7/bits/c++config.h \
+ /usr/include/x86_64-linux-gnu/c++/7/bits/os_defines.h \
  /usr/include/x86_64-linux-gnu/c++/7/bits/cpu_defines.h \
  /usr/include/stdlib.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
- /usr/lib/gcc/x86_64-linux-gnu/7/include/stddef.h \
  /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
  /usr/include/x86_64-linux-gnu/bits/floatn.h \
  /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
- /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
  /usr/include/x86_64-linux-gnu/sys/types.h \
- /usr/include/x86_64-linux-gnu/bits/types.h \
- /usr/include/x86_64-linux-gnu/bits/typesizes.h \
- /usr/include/x86_64-linux-gnu/bits/types/clock_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h /usr/include/endian.h \
  /usr/include/x86_64-linux-gnu/bits/endian.h \
  /usr/include/x86_64-linux-gnu/bits/byteswap.h \
@@ -849,8 +900,6 @@ preemptive.o: ../threads/preemptive.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/select.h \
  /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
- /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h \
  /usr/include/x86_64-linux-gnu/sys/sysmacros.h \
  /usr/include/x86_64-linux-gnu/bits/sysmacros.h \
  /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h \
@@ -873,13 +922,13 @@ preemptive.o: ../threads/preemptive.cc /usr/include/stdc-predef.h \
  ../machine/disk.hh ../threads/utility.hh ../machine/translation_entry.hh \
  ../threads/utility.hh ../userprog/address_space.hh \
  ../filesys/file_system.hh ../filesys/open_file.hh \
- ../machine/translation_entry.hh ../threads/scheduler.hh \
+ ../machine/translation_entry.hh ../bin/noff.h ../threads/scheduler.hh \
  ../threads/list.hh ../userprog/bitmap.hh ../filesys/open_file.hh \
  ../machine/interrupt.hh ../threads/list.hh ../machine/statistics.hh \
  ../machine/timer.hh ../userprog/processTable.hh ../userprog/syscall.h \
- ../userprog/../threads/list.hh ../userprog/synch_console.hh \
- ../threads/synch.hh ../machine/console.hh /usr/include/unistd.h \
- /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ ../userprog/../threads/list.hh ../userprog/../threads/thread.hh \
+ ../userprog/synch_console.hh ../threads/synch.hh ../machine/console.hh \
+ /usr/include/unistd.h /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
  /usr/include/x86_64-linux-gnu/bits/environments.h \
  /usr/include/x86_64-linux-gnu/bits/confname.h \
  /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
@@ -962,7 +1011,12 @@ address_space.o: ../userprog/address_space.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/strings.h ../machine/translation_entry.hh ../bin/noff.h \
- ../threads/system.hh ../threads/utility.hh ../threads/thread.hh \
+ ../threads/system.hh /usr/include/time.h \
+ /usr/include/x86_64-linux-gnu/bits/time.h \
+ /usr/include/x86_64-linux-gnu/bits/timex.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
+ ../threads/utility.hh ../threads/thread.hh \
  ../threads/../userprog/openFileTable.hh ../threads/../userprog/syscall.h \
  ../threads/../userprog/../threads/list.hh \
  ../threads/../userprog/../threads/utility.hh ../machine/machine.hh \
@@ -971,8 +1025,8 @@ address_space.o: ../userprog/address_space.cc /usr/include/stdc-predef.h \
  ../userprog/bitmap.hh ../filesys/open_file.hh ../machine/interrupt.hh \
  ../threads/list.hh ../machine/statistics.hh ../machine/timer.hh \
  ../userprog/processTable.hh ../userprog/syscall.h \
- ../userprog/../threads/list.hh ../userprog/synch_console.hh \
- ../threads/synch.hh ../machine/console.hh
+ ../userprog/../threads/list.hh ../userprog/../threads/thread.hh \
+ ../userprog/synch_console.hh ../threads/synch.hh ../machine/console.hh
 bitmap.o: ../userprog/bitmap.cc /usr/include/stdc-predef.h \
  ../userprog/bitmap.hh ../filesys/open_file.hh ../threads/utility.hh \
  ../machine/system_dep.hh /usr/include/c++/7/stdlib.h \
@@ -1088,35 +1142,41 @@ synch_console.o: ../userprog/synch_console.cc /usr/include/stdc-predef.h \
  ../machine/disk.hh ../threads/utility.hh ../machine/translation_entry.hh \
  ../threads/utility.hh ../userprog/address_space.hh \
  ../filesys/file_system.hh ../filesys/open_file.hh \
- ../machine/translation_entry.hh ../machine/console.hh
+ ../machine/translation_entry.hh ../bin/noff.h ../machine/console.hh
 exception.o: ../userprog/exception.cc /usr/include/stdc-predef.h \
- ../userprog/syscall.h ../threads/system.hh ../threads/utility.hh \
- ../machine/system_dep.hh /usr/include/c++/7/stdlib.h \
- /usr/include/c++/7/cstdlib \
- /usr/include/x86_64-linux-gnu/c++/7/bits/c++config.h \
- /usr/include/x86_64-linux-gnu/c++/7/bits/os_defines.h \
+ ../userprog/syscall.h ../threads/system.hh /usr/include/time.h \
  /usr/include/features.h /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
  /usr/include/x86_64-linux-gnu/bits/long-double.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
+ /usr/lib/gcc/x86_64-linux-gnu/7/include/stddef.h \
+ /usr/include/x86_64-linux-gnu/bits/time.h \
+ /usr/include/x86_64-linux-gnu/bits/types.h \
+ /usr/include/x86_64-linux-gnu/bits/typesizes.h \
+ /usr/include/x86_64-linux-gnu/bits/timex.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
+ /usr/include/x86_64-linux-gnu/bits/types/clock_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h \
+ /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
+ /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
+ ../threads/utility.hh ../machine/system_dep.hh \
+ /usr/include/c++/7/stdlib.h /usr/include/c++/7/cstdlib \
+ /usr/include/x86_64-linux-gnu/c++/7/bits/c++config.h \
+ /usr/include/x86_64-linux-gnu/c++/7/bits/os_defines.h \
  /usr/include/x86_64-linux-gnu/c++/7/bits/cpu_defines.h \
  /usr/include/stdlib.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
- /usr/lib/gcc/x86_64-linux-gnu/7/include/stddef.h \
  /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
  /usr/include/x86_64-linux-gnu/bits/floatn.h \
  /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
- /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
  /usr/include/x86_64-linux-gnu/sys/types.h \
- /usr/include/x86_64-linux-gnu/bits/types.h \
- /usr/include/x86_64-linux-gnu/bits/typesizes.h \
- /usr/include/x86_64-linux-gnu/bits/types/clock_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h /usr/include/endian.h \
  /usr/include/x86_64-linux-gnu/bits/endian.h \
  /usr/include/x86_64-linux-gnu/bits/byteswap.h \
@@ -1126,8 +1186,6 @@ exception.o: ../userprog/exception.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/select.h \
  /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
- /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h \
  /usr/include/x86_64-linux-gnu/sys/sysmacros.h \
  /usr/include/x86_64-linux-gnu/bits/sysmacros.h \
  /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h \
@@ -1150,12 +1208,13 @@ exception.o: ../userprog/exception.cc /usr/include/stdc-predef.h \
  ../machine/disk.hh ../threads/utility.hh ../machine/translation_entry.hh \
  ../threads/utility.hh ../userprog/address_space.hh \
  ../filesys/file_system.hh ../filesys/open_file.hh \
- ../machine/translation_entry.hh ../threads/scheduler.hh \
+ ../machine/translation_entry.hh ../bin/noff.h ../threads/scheduler.hh \
  ../threads/list.hh ../userprog/bitmap.hh ../filesys/open_file.hh \
  ../machine/interrupt.hh ../threads/list.hh ../machine/statistics.hh \
  ../machine/timer.hh ../userprog/processTable.hh \
- ../userprog/../threads/list.hh ../userprog/synch_console.hh \
- ../threads/synch.hh ../machine/console.hh ../userprog/args.cc
+ ../userprog/../threads/list.hh ../userprog/../threads/thread.hh \
+ ../userprog/synch_console.hh ../threads/synch.hh ../machine/console.hh \
+ ../userprog/args.cc
 args.o: ../userprog/args.cc /usr/include/stdc-predef.h \
  ../machine/machine.hh ../machine/disk.hh ../threads/utility.hh \
  ../machine/system_dep.hh /usr/include/c++/7/stdlib.h \
@@ -1211,18 +1270,23 @@ args.o: ../userprog/args.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/strings.h ../machine/translation_entry.hh \
- ../threads/utility.hh ../threads/system.hh ../threads/utility.hh \
- ../threads/thread.hh ../threads/../userprog/openFileTable.hh \
- ../threads/../userprog/syscall.h \
+ ../threads/utility.hh ../threads/system.hh /usr/include/time.h \
+ /usr/include/x86_64-linux-gnu/bits/time.h \
+ /usr/include/x86_64-linux-gnu/bits/timex.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
+ ../threads/utility.hh ../threads/thread.hh \
+ ../threads/../userprog/openFileTable.hh ../threads/../userprog/syscall.h \
  ../threads/../userprog/../threads/list.hh \
  ../threads/../userprog/../threads/utility.hh \
  ../userprog/address_space.hh ../filesys/file_system.hh \
- ../filesys/open_file.hh ../machine/translation_entry.hh \
+ ../filesys/open_file.hh ../machine/translation_entry.hh ../bin/noff.h \
  ../threads/scheduler.hh ../threads/list.hh ../userprog/bitmap.hh \
  ../filesys/open_file.hh ../machine/interrupt.hh ../threads/list.hh \
  ../machine/statistics.hh ../machine/timer.hh ../userprog/processTable.hh \
  ../userprog/syscall.h ../userprog/../threads/list.hh \
- ../userprog/synch_console.hh ../threads/synch.hh ../machine/console.hh
+ ../userprog/../threads/thread.hh ../userprog/synch_console.hh \
+ ../threads/synch.hh ../machine/console.hh
 prog_test.o: ../userprog/prog_test.cc /usr/include/stdc-predef.h \
  ../userprog/address_space.hh ../filesys/file_system.hh \
  ../filesys/open_file.hh ../threads/utility.hh ../machine/system_dep.hh \
@@ -1277,18 +1341,22 @@ prog_test.o: ../userprog/prog_test.cc /usr/include/stdc-predef.h \
  /usr/lib/gcc/x86_64-linux-gnu/7/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/strings.h ../machine/translation_entry.hh \
+ /usr/include/strings.h ../machine/translation_entry.hh ../bin/noff.h \
  ../threads/synch.hh ../threads/list.hh ../threads/utility.hh \
  ../threads/thread.hh ../threads/../userprog/openFileTable.hh \
  ../threads/../userprog/syscall.h \
  ../threads/../userprog/../threads/list.hh ../machine/machine.hh \
  ../machine/disk.hh ../threads/utility.hh ../machine/translation_entry.hh \
- ../userprog/address_space.hh ../threads/system.hh \
+ ../userprog/address_space.hh ../threads/system.hh /usr/include/time.h \
+ /usr/include/x86_64-linux-gnu/bits/time.h \
+ /usr/include/x86_64-linux-gnu/bits/timex.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
  ../threads/scheduler.hh ../userprog/bitmap.hh ../filesys/open_file.hh \
  ../machine/interrupt.hh ../threads/list.hh ../machine/statistics.hh \
  ../machine/timer.hh ../userprog/processTable.hh ../userprog/syscall.h \
- ../userprog/../threads/list.hh ../userprog/synch_console.hh \
- ../machine/console.hh
+ ../userprog/../threads/list.hh ../userprog/../threads/thread.hh \
+ ../userprog/synch_console.hh ../machine/console.hh
 console.o: ../machine/console.cc /usr/include/stdc-predef.h \
  ../machine/console.hh ../threads/utility.hh ../machine/system_dep.hh \
  /usr/include/c++/7/stdlib.h /usr/include/c++/7/cstdlib \
@@ -1342,19 +1410,24 @@ console.o: ../machine/console.cc /usr/include/stdc-predef.h \
  /usr/lib/gcc/x86_64-linux-gnu/7/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/strings.h ../threads/system.hh ../threads/utility.hh \
- ../threads/thread.hh ../threads/../userprog/openFileTable.hh \
- ../threads/../userprog/syscall.h \
+ /usr/include/strings.h ../threads/system.hh /usr/include/time.h \
+ /usr/include/x86_64-linux-gnu/bits/time.h \
+ /usr/include/x86_64-linux-gnu/bits/timex.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
+ ../threads/utility.hh ../threads/thread.hh \
+ ../threads/../userprog/openFileTable.hh ../threads/../userprog/syscall.h \
  ../threads/../userprog/../threads/list.hh \
  ../threads/../userprog/../threads/utility.hh ../machine/machine.hh \
  ../machine/disk.hh ../threads/utility.hh ../machine/translation_entry.hh \
  ../userprog/address_space.hh ../filesys/file_system.hh \
- ../filesys/open_file.hh ../machine/translation_entry.hh \
+ ../filesys/open_file.hh ../machine/translation_entry.hh ../bin/noff.h \
  ../threads/scheduler.hh ../threads/list.hh ../userprog/bitmap.hh \
  ../filesys/open_file.hh ../machine/interrupt.hh ../threads/list.hh \
  ../machine/statistics.hh ../machine/timer.hh ../userprog/processTable.hh \
  ../userprog/syscall.h ../userprog/../threads/list.hh \
- ../userprog/synch_console.hh ../threads/synch.hh ../machine/console.hh
+ ../userprog/../threads/thread.hh ../userprog/synch_console.hh \
+ ../threads/synch.hh ../machine/console.hh
 debugger.o: ../machine/debugger.cc /usr/include/stdc-predef.h \
  ../machine/debugger.hh ../machine/machine.hh ../machine/disk.hh \
  ../threads/utility.hh ../machine/system_dep.hh \
@@ -1412,16 +1485,21 @@ debugger.o: ../machine/debugger.cc /usr/include/stdc-predef.h \
  /usr/include/strings.h ../machine/translation_entry.hh \
  ../threads/utility.hh ../machine/interrupt.hh ../threads/list.hh \
  ../threads/utility.hh ../machine/statistics.hh ../threads/system.hh \
+ /usr/include/time.h /usr/include/x86_64-linux-gnu/bits/time.h \
+ /usr/include/x86_64-linux-gnu/bits/timex.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
  ../threads/thread.hh ../threads/../userprog/openFileTable.hh \
  ../threads/../userprog/syscall.h \
  ../threads/../userprog/../threads/list.hh ../machine/machine.hh \
  ../userprog/address_space.hh ../filesys/file_system.hh \
- ../filesys/open_file.hh ../machine/translation_entry.hh \
+ ../filesys/open_file.hh ../machine/translation_entry.hh ../bin/noff.h \
  ../threads/scheduler.hh ../threads/list.hh ../userprog/bitmap.hh \
  ../filesys/open_file.hh ../machine/interrupt.hh ../machine/statistics.hh \
  ../machine/timer.hh ../userprog/processTable.hh ../userprog/syscall.h \
- ../userprog/../threads/list.hh ../userprog/synch_console.hh \
- ../threads/synch.hh ../machine/console.hh /usr/include/ctype.h
+ ../userprog/../threads/list.hh ../userprog/../threads/thread.hh \
+ ../userprog/synch_console.hh ../threads/synch.hh ../machine/console.hh \
+ /usr/include/ctype.h
 encoding.o: ../machine/encoding.cc /usr/include/stdc-predef.h \
  ../machine/encoding.hh
 instruction.o: ../machine/instruction.cc /usr/include/stdc-predef.h \
@@ -1534,18 +1612,23 @@ machine.o: ../machine/machine.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/strings.h ../machine/translation_entry.hh \
- ../threads/utility.hh ../threads/system.hh ../threads/utility.hh \
- ../threads/thread.hh ../threads/../userprog/openFileTable.hh \
- ../threads/../userprog/syscall.h \
+ ../threads/utility.hh ../threads/system.hh /usr/include/time.h \
+ /usr/include/x86_64-linux-gnu/bits/time.h \
+ /usr/include/x86_64-linux-gnu/bits/timex.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
+ ../threads/utility.hh ../threads/thread.hh \
+ ../threads/../userprog/openFileTable.hh ../threads/../userprog/syscall.h \
  ../threads/../userprog/../threads/list.hh \
  ../threads/../userprog/../threads/utility.hh ../machine/machine.hh \
  ../userprog/address_space.hh ../filesys/file_system.hh \
- ../filesys/open_file.hh ../machine/translation_entry.hh \
+ ../filesys/open_file.hh ../machine/translation_entry.hh ../bin/noff.h \
  ../threads/scheduler.hh ../threads/list.hh ../userprog/bitmap.hh \
  ../filesys/open_file.hh ../machine/interrupt.hh ../threads/list.hh \
  ../machine/statistics.hh ../machine/timer.hh ../userprog/processTable.hh \
  ../userprog/syscall.h ../userprog/../threads/list.hh \
- ../userprog/synch_console.hh ../threads/synch.hh ../machine/console.hh
+ ../userprog/../threads/thread.hh ../userprog/synch_console.hh \
+ ../threads/synch.hh ../machine/console.hh
 mips_sim.o: ../machine/mips_sim.cc /usr/include/stdc-predef.h \
  ../machine/debugger.hh ../machine/machine.hh ../machine/disk.hh \
  ../threads/utility.hh ../machine/system_dep.hh \
@@ -1602,17 +1685,23 @@ mips_sim.o: ../machine/mips_sim.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/strings.h ../machine/translation_entry.hh \
  ../threads/utility.hh ../machine/instruction.hh ../machine/encoding.hh \
- ../threads/system.hh ../threads/utility.hh ../threads/thread.hh \
+ ../threads/system.hh /usr/include/time.h \
+ /usr/include/x86_64-linux-gnu/bits/time.h \
+ /usr/include/x86_64-linux-gnu/bits/timex.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
+ ../threads/utility.hh ../threads/thread.hh \
  ../threads/../userprog/openFileTable.hh ../threads/../userprog/syscall.h \
  ../threads/../userprog/../threads/list.hh \
  ../threads/../userprog/../threads/utility.hh ../machine/machine.hh \
  ../userprog/address_space.hh ../filesys/file_system.hh \
- ../filesys/open_file.hh ../machine/translation_entry.hh \
+ ../filesys/open_file.hh ../machine/translation_entry.hh ../bin/noff.h \
  ../threads/scheduler.hh ../threads/list.hh ../userprog/bitmap.hh \
  ../filesys/open_file.hh ../machine/interrupt.hh ../threads/list.hh \
  ../machine/statistics.hh ../machine/timer.hh ../userprog/processTable.hh \
  ../userprog/syscall.h ../userprog/../threads/list.hh \
- ../userprog/synch_console.hh ../threads/synch.hh ../machine/console.hh
+ ../userprog/../threads/thread.hh ../userprog/synch_console.hh \
+ ../threads/synch.hh ../machine/console.hh
 processTable.o: ../userprog/processTable.cc /usr/include/stdc-predef.h \
  ../userprog/processTable.hh ../userprog/syscall.h \
  ../userprog/../threads/list.hh ../userprog/../threads/utility.hh \
@@ -1668,7 +1757,14 @@ processTable.o: ../userprog/processTable.cc /usr/include/stdc-predef.h \
  /usr/lib/gcc/x86_64-linux-gnu/7/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/strings.h
+ /usr/include/strings.h ../userprog/../threads/thread.hh \
+ ../userprog/../threads/../userprog/openFileTable.hh \
+ ../userprog/../threads/../userprog/syscall.h \
+ ../userprog/../threads/../userprog/../threads/list.hh \
+ ../machine/machine.hh ../machine/disk.hh ../threads/utility.hh \
+ ../machine/translation_entry.hh ../threads/utility.hh \
+ ../userprog/address_space.hh ../filesys/file_system.hh \
+ ../filesys/open_file.hh ../machine/translation_entry.hh ../bin/noff.h
 translate.o: ../machine/translate.cc /usr/include/stdc-predef.h \
  ../machine/machine.hh ../machine/disk.hh ../threads/utility.hh \
  ../machine/system_dep.hh /usr/include/c++/7/stdlib.h \
@@ -1724,18 +1820,78 @@ translate.o: ../machine/translate.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/strings.h ../machine/translation_entry.hh \
- ../threads/utility.hh ../threads/system.hh ../threads/utility.hh \
- ../threads/thread.hh ../threads/../userprog/openFileTable.hh \
- ../threads/../userprog/syscall.h \
+ ../threads/utility.hh ../threads/system.hh /usr/include/time.h \
+ /usr/include/x86_64-linux-gnu/bits/time.h \
+ /usr/include/x86_64-linux-gnu/bits/timex.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
+ ../threads/utility.hh ../threads/thread.hh \
+ ../threads/../userprog/openFileTable.hh ../threads/../userprog/syscall.h \
  ../threads/../userprog/../threads/list.hh \
  ../threads/../userprog/../threads/utility.hh ../machine/machine.hh \
  ../userprog/address_space.hh ../filesys/file_system.hh \
- ../filesys/open_file.hh ../machine/translation_entry.hh \
+ ../filesys/open_file.hh ../machine/translation_entry.hh ../bin/noff.h \
  ../threads/scheduler.hh ../threads/list.hh ../userprog/bitmap.hh \
  ../filesys/open_file.hh ../machine/interrupt.hh ../threads/list.hh \
  ../machine/statistics.hh ../machine/timer.hh ../userprog/processTable.hh \
  ../userprog/syscall.h ../userprog/../threads/list.hh \
- ../userprog/synch_console.hh ../threads/synch.hh ../machine/console.hh
+ ../userprog/../threads/thread.hh ../userprog/synch_console.hh \
+ ../threads/synch.hh ../machine/console.hh
+paging.o: paging.cc /usr/include/stdc-predef.h paging.hh \
+ ../userprog/syscall.h ../threads/list.hh ../threads/utility.hh \
+ ../machine/system_dep.hh /usr/include/c++/7/stdlib.h \
+ /usr/include/c++/7/cstdlib \
+ /usr/include/x86_64-linux-gnu/c++/7/bits/c++config.h \
+ /usr/include/x86_64-linux-gnu/c++/7/bits/os_defines.h \
+ /usr/include/features.h /usr/include/x86_64-linux-gnu/sys/cdefs.h \
+ /usr/include/x86_64-linux-gnu/bits/wordsize.h \
+ /usr/include/x86_64-linux-gnu/bits/long-double.h \
+ /usr/include/x86_64-linux-gnu/gnu/stubs.h \
+ /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
+ /usr/include/x86_64-linux-gnu/c++/7/bits/cpu_defines.h \
+ /usr/include/stdlib.h \
+ /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
+ /usr/lib/gcc/x86_64-linux-gnu/7/include/stddef.h \
+ /usr/include/x86_64-linux-gnu/bits/waitflags.h \
+ /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
+ /usr/include/x86_64-linux-gnu/bits/floatn.h \
+ /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
+ /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
+ /usr/include/x86_64-linux-gnu/sys/types.h \
+ /usr/include/x86_64-linux-gnu/bits/types.h \
+ /usr/include/x86_64-linux-gnu/bits/typesizes.h \
+ /usr/include/x86_64-linux-gnu/bits/types/clock_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
+ /usr/include/x86_64-linux-gnu/bits/stdint-intn.h /usr/include/endian.h \
+ /usr/include/x86_64-linux-gnu/bits/endian.h \
+ /usr/include/x86_64-linux-gnu/bits/byteswap.h \
+ /usr/include/x86_64-linux-gnu/bits/byteswap-16.h \
+ /usr/include/x86_64-linux-gnu/bits/uintn-identity.h \
+ /usr/include/x86_64-linux-gnu/sys/select.h \
+ /usr/include/x86_64-linux-gnu/bits/select.h \
+ /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h \
+ /usr/include/x86_64-linux-gnu/sys/sysmacros.h \
+ /usr/include/x86_64-linux-gnu/bits/sysmacros.h \
+ /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h \
+ /usr/include/x86_64-linux-gnu/bits/thread-shared-types.h \
+ /usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h \
+ /usr/include/alloca.h /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
+ /usr/include/c++/7/bits/std_abs.h /usr/include/stdio.h \
+ /usr/include/x86_64-linux-gnu/bits/types/__FILE.h \
+ /usr/include/x86_64-linux-gnu/bits/types/FILE.h \
+ /usr/include/x86_64-linux-gnu/bits/libio.h \
+ /usr/include/x86_64-linux-gnu/bits/_G_config.h \
+ /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h \
+ /usr/lib/gcc/x86_64-linux-gnu/7/include/stdarg.h \
+ /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
+ /usr/include/strings.h
 copyright.o: ../threads/copyright.h /usr/include/stdc-predef.h
 list.o: ../threads/list.hh /usr/include/stdc-predef.h \
  ../threads/utility.hh ../machine/system_dep.hh \
@@ -1850,7 +2006,7 @@ scheduler.o: ../threads/scheduler.hh /usr/include/stdc-predef.h \
  ../machine/disk.hh ../threads/utility.hh ../machine/translation_entry.hh \
  ../threads/utility.hh ../userprog/address_space.hh \
  ../filesys/file_system.hh ../filesys/open_file.hh \
- ../machine/translation_entry.hh
+ ../machine/translation_entry.hh ../bin/noff.h
 synch.o: ../threads/synch.hh /usr/include/stdc-predef.h \
  ../threads/list.hh ../threads/utility.hh ../machine/system_dep.hh \
  /usr/include/c++/7/stdlib.h /usr/include/c++/7/cstdlib \
@@ -1910,7 +2066,7 @@ synch.o: ../threads/synch.hh /usr/include/stdc-predef.h \
  ../machine/disk.hh ../threads/utility.hh ../machine/translation_entry.hh \
  ../threads/utility.hh ../userprog/address_space.hh \
  ../filesys/file_system.hh ../filesys/open_file.hh \
- ../machine/translation_entry.hh
+ ../machine/translation_entry.hh ../bin/noff.h
 synch_list.o: ../threads/synch_list.hh /usr/include/stdc-predef.h \
  ../threads/list.hh ../threads/utility.hh ../machine/system_dep.hh \
  /usr/include/c++/7/stdlib.h /usr/include/c++/7/cstdlib \
@@ -1970,34 +2126,41 @@ synch_list.o: ../threads/synch_list.hh /usr/include/stdc-predef.h \
  ../machine/disk.hh ../threads/utility.hh ../machine/translation_entry.hh \
  ../threads/utility.hh ../userprog/address_space.hh \
  ../filesys/file_system.hh ../filesys/open_file.hh \
- ../machine/translation_entry.hh
+ ../machine/translation_entry.hh ../bin/noff.h
 system.o: ../threads/system.hh /usr/include/stdc-predef.h \
- ../threads/utility.hh ../machine/system_dep.hh \
- /usr/include/c++/7/stdlib.h /usr/include/c++/7/cstdlib \
- /usr/include/x86_64-linux-gnu/c++/7/bits/c++config.h \
- /usr/include/x86_64-linux-gnu/c++/7/bits/os_defines.h \
- /usr/include/features.h /usr/include/x86_64-linux-gnu/sys/cdefs.h \
+ /usr/include/time.h /usr/include/features.h \
+ /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
  /usr/include/x86_64-linux-gnu/bits/long-double.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
+ /usr/lib/gcc/x86_64-linux-gnu/7/include/stddef.h \
+ /usr/include/x86_64-linux-gnu/bits/time.h \
+ /usr/include/x86_64-linux-gnu/bits/types.h \
+ /usr/include/x86_64-linux-gnu/bits/typesizes.h \
+ /usr/include/x86_64-linux-gnu/bits/timex.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
+ /usr/include/x86_64-linux-gnu/bits/types/clock_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h \
+ /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
+ /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
+ ../threads/utility.hh ../machine/system_dep.hh \
+ /usr/include/c++/7/stdlib.h /usr/include/c++/7/cstdlib \
+ /usr/include/x86_64-linux-gnu/c++/7/bits/c++config.h \
+ /usr/include/x86_64-linux-gnu/c++/7/bits/os_defines.h \
  /usr/include/x86_64-linux-gnu/c++/7/bits/cpu_defines.h \
  /usr/include/stdlib.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
- /usr/lib/gcc/x86_64-linux-gnu/7/include/stddef.h \
  /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
  /usr/include/x86_64-linux-gnu/bits/floatn.h \
  /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
- /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
  /usr/include/x86_64-linux-gnu/sys/types.h \
- /usr/include/x86_64-linux-gnu/bits/types.h \
- /usr/include/x86_64-linux-gnu/bits/typesizes.h \
- /usr/include/x86_64-linux-gnu/bits/types/clock_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h /usr/include/endian.h \
  /usr/include/x86_64-linux-gnu/bits/endian.h \
  /usr/include/x86_64-linux-gnu/bits/byteswap.h \
@@ -2007,8 +2170,6 @@ system.o: ../threads/system.hh /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/select.h \
  /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h \
- /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
- /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h \
  /usr/include/x86_64-linux-gnu/sys/sysmacros.h \
  /usr/include/x86_64-linux-gnu/bits/sysmacros.h \
  /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h \
@@ -2031,12 +2192,12 @@ system.o: ../threads/system.hh /usr/include/stdc-predef.h \
  ../machine/disk.hh ../threads/utility.hh ../machine/translation_entry.hh \
  ../threads/utility.hh ../userprog/address_space.hh \
  ../filesys/file_system.hh ../filesys/open_file.hh \
- ../machine/translation_entry.hh ../threads/scheduler.hh \
+ ../machine/translation_entry.hh ../bin/noff.h ../threads/scheduler.hh \
  ../threads/list.hh ../userprog/bitmap.hh ../filesys/open_file.hh \
  ../machine/interrupt.hh ../threads/list.hh ../machine/statistics.hh \
  ../machine/timer.hh ../userprog/processTable.hh ../userprog/syscall.h \
- ../userprog/../threads/list.hh ../userprog/synch_console.hh \
- ../threads/synch.hh ../machine/console.hh
+ ../userprog/../threads/list.hh ../userprog/../threads/thread.hh \
+ ../userprog/synch_console.hh ../threads/synch.hh ../machine/console.hh
 thread.o: ../threads/thread.hh /usr/include/stdc-predef.h \
  ../threads/utility.hh ../machine/system_dep.hh \
  /usr/include/c++/7/stdlib.h /usr/include/c++/7/cstdlib \
@@ -2097,7 +2258,7 @@ thread.o: ../threads/thread.hh /usr/include/stdc-predef.h \
  ../machine/disk.hh ../threads/utility.hh ../machine/translation_entry.hh \
  ../threads/utility.hh ../userprog/address_space.hh \
  ../filesys/file_system.hh ../filesys/open_file.hh \
- ../machine/translation_entry.hh
+ ../machine/translation_entry.hh ../bin/noff.h
 utility.o: ../threads/utility.hh /usr/include/stdc-predef.h \
  ../machine/system_dep.hh /usr/include/c++/7/stdlib.h \
  /usr/include/c++/7/cstdlib \
@@ -2424,7 +2585,7 @@ address_space.o: ../userprog/address_space.hh /usr/include/stdc-predef.h \
  /usr/lib/gcc/x86_64-linux-gnu/7/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/strings.h ../machine/translation_entry.hh
+ /usr/include/strings.h ../machine/translation_entry.hh ../bin/noff.h
 bitmap.o: ../userprog/bitmap.hh /usr/include/stdc-predef.h \
  ../filesys/open_file.hh ../threads/utility.hh ../machine/system_dep.hh \
  /usr/include/c++/7/stdlib.h /usr/include/c++/7/cstdlib \
@@ -2539,7 +2700,7 @@ synch_console.o: ../userprog/synch_console.hh /usr/include/stdc-predef.h \
  ../machine/disk.hh ../threads/utility.hh ../machine/translation_entry.hh \
  ../threads/utility.hh ../userprog/address_space.hh \
  ../filesys/file_system.hh ../filesys/open_file.hh \
- ../machine/translation_entry.hh ../machine/console.hh
+ ../machine/translation_entry.hh ../bin/noff.h ../machine/console.hh
 file_system.o: ../filesys/file_system.hh /usr/include/stdc-predef.h \
  ../filesys/open_file.hh ../threads/utility.hh ../machine/system_dep.hh \
  /usr/include/c++/7/stdlib.h /usr/include/c++/7/cstdlib \
@@ -2870,11 +3031,72 @@ processTable.o: ../userprog/processTable.hh /usr/include/stdc-predef.h \
  /usr/lib/gcc/x86_64-linux-gnu/7/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/strings.h
+ /usr/include/strings.h ../userprog/../threads/thread.hh \
+ ../userprog/../threads/../userprog/openFileTable.hh \
+ ../userprog/../threads/../userprog/syscall.h \
+ ../userprog/../threads/../userprog/../threads/list.hh \
+ ../machine/machine.hh ../machine/disk.hh ../threads/utility.hh \
+ ../machine/translation_entry.hh ../threads/utility.hh \
+ ../userprog/address_space.hh ../filesys/file_system.hh \
+ ../filesys/open_file.hh ../machine/translation_entry.hh ../bin/noff.h
 translation_entry.o: ../machine/translation_entry.hh \
  /usr/include/stdc-predef.h ../threads/utility.hh \
  ../machine/system_dep.hh /usr/include/c++/7/stdlib.h \
  /usr/include/c++/7/cstdlib \
+ /usr/include/x86_64-linux-gnu/c++/7/bits/c++config.h \
+ /usr/include/x86_64-linux-gnu/c++/7/bits/os_defines.h \
+ /usr/include/features.h /usr/include/x86_64-linux-gnu/sys/cdefs.h \
+ /usr/include/x86_64-linux-gnu/bits/wordsize.h \
+ /usr/include/x86_64-linux-gnu/bits/long-double.h \
+ /usr/include/x86_64-linux-gnu/gnu/stubs.h \
+ /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
+ /usr/include/x86_64-linux-gnu/c++/7/bits/cpu_defines.h \
+ /usr/include/stdlib.h \
+ /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
+ /usr/lib/gcc/x86_64-linux-gnu/7/include/stddef.h \
+ /usr/include/x86_64-linux-gnu/bits/waitflags.h \
+ /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
+ /usr/include/x86_64-linux-gnu/bits/floatn.h \
+ /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
+ /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
+ /usr/include/x86_64-linux-gnu/sys/types.h \
+ /usr/include/x86_64-linux-gnu/bits/types.h \
+ /usr/include/x86_64-linux-gnu/bits/typesizes.h \
+ /usr/include/x86_64-linux-gnu/bits/types/clock_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
+ /usr/include/x86_64-linux-gnu/bits/stdint-intn.h /usr/include/endian.h \
+ /usr/include/x86_64-linux-gnu/bits/endian.h \
+ /usr/include/x86_64-linux-gnu/bits/byteswap.h \
+ /usr/include/x86_64-linux-gnu/bits/byteswap-16.h \
+ /usr/include/x86_64-linux-gnu/bits/uintn-identity.h \
+ /usr/include/x86_64-linux-gnu/sys/select.h \
+ /usr/include/x86_64-linux-gnu/bits/select.h \
+ /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h \
+ /usr/include/x86_64-linux-gnu/sys/sysmacros.h \
+ /usr/include/x86_64-linux-gnu/bits/sysmacros.h \
+ /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h \
+ /usr/include/x86_64-linux-gnu/bits/thread-shared-types.h \
+ /usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h \
+ /usr/include/alloca.h /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
+ /usr/include/c++/7/bits/std_abs.h /usr/include/stdio.h \
+ /usr/include/x86_64-linux-gnu/bits/types/__FILE.h \
+ /usr/include/x86_64-linux-gnu/bits/types/FILE.h \
+ /usr/include/x86_64-linux-gnu/bits/libio.h \
+ /usr/include/x86_64-linux-gnu/bits/_G_config.h \
+ /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h \
+ /usr/lib/gcc/x86_64-linux-gnu/7/include/stdarg.h \
+ /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
+ /usr/include/strings.h
+paging.o: paging.hh /usr/include/stdc-predef.h ../userprog/syscall.h \
+ ../threads/list.hh ../threads/utility.hh ../machine/system_dep.hh \
+ /usr/include/c++/7/stdlib.h /usr/include/c++/7/cstdlib \
  /usr/include/x86_64-linux-gnu/c++/7/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/7/bits/os_defines.h \
  /usr/include/features.h /usr/include/x86_64-linux-gnu/sys/cdefs.h \

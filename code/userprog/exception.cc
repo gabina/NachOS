@@ -227,6 +227,17 @@ ExceptionHandler(ExceptionType which)
 					t->space = space;
 					/* spaceID no está seteado al spaceID del thread*/
 					SpaceId spaceID = processTable->NewProcess(t);
+
+					#ifdef USE_VMEM
+					// Creo el archivo SWAP
+					char* fileName = new char [20];
+					snprintf(fileName, 20, "SWAP._%d", (int) (t->spaceId));
+					if(!fileSystem->Create(fileName, 0)){
+						printf("Error al crear archivo del SWAP\n");
+						ASSERT(false);
+					}
+					#endif
+
 					/* Retorno el spaceID*/
 					machine->WriteRegister(2, spaceID);
 					t->Fork(processCreator,localArgs);
@@ -266,9 +277,36 @@ ExceptionHandler(ExceptionType which)
 				
 				/* Si la página no está marcada en la tabla como válida,
 				* entonces no está cargada en memoria y debo hacerlo*/
-				if (!pageTable[vpn].valid)
-					(currentThread->space)->OnDemand(vpn);
+				if (!pageTable[vpn].valid){
+					
+					#ifdef USE_VMEM
+					/* Si no hay marcos de memoria física disponibles*/
+					if(!bitmap->NumClear()){
+						Victim *victim = GiveVictim(victims);
+						Thread *thread = GetProcess(victim->process);
+						TranslationEntry* pageTable = (thread->space)->pageTable;
+						unsigned physicalPage = pageTable[victim->virtualPage];
+						//TO DO: copiar la página en el archivo correspondiente y liberarla
 
+						//Abrir el archivo si aún no está abierto
+						if(thread->swap==NULL){
+							char* fileName = new char [20];
+							snprintf(fileName, 20, "SWAP._%d", (int) (thread->spaceId));
+							thread->swap = fileSystem->Open(fileName);
+							delete fileName;
+						}
+						int block = PAGE_SIZE*(victim->virtualPage);
+						(thread->swap)->WriteAt(&(machine->mainMemory[physicalPage]),
+												PAGE_SIZE,block);
+						bitMap->Clear(physicalPage);
+					}
+					Victim *newVictim = new Victim;
+					newVictim->process = currentThread->GetSpaceId();
+					newVictim->virtualPage = vpn; 
+					victims->Append(newVictim);
+					#endif
+					(currentThread->space)->OnDemand(vpn);
+				}
 				// Cargo la entrada al TLB
 				(machine->tlb)[nextEntry] = pageTable[vpn];
 				nextEntry = (nextEntry+1) %	TLB_SIZE;

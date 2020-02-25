@@ -37,11 +37,13 @@ Thread::Thread(const char* threadName, Port * dadPort, int prio)
     stackTop = NULL;
     stack    = NULL;
     status   = JUST_CREATED;
-#ifdef USER_PROGRAM
+    #ifdef USER_PROGRAM
     space    = NULL;
-#endif
+    #endif
     join = false;
-
+    #ifdef USE_VMEM
+    swap = NULL;
+    #endif
 	/* Asigno prioridades. Por defecto es la 4 */
 	priority = prio;
 	realPriority = prio;
@@ -63,9 +65,27 @@ Thread::~Thread()
     DEBUG('t', "Deleting thread \"%s\"\n", name);
     ASSERT(this != currentThread);
 
-#ifdef USER_PROGRAM  
+    #ifdef USE_VMEM
+    //Elimino el proceso de la FIFO
+    deleteVictims(victims,spaceId);
+    //Cierro el archivo del SWAP
+    if(swap!=NULL)
+        delete swap;
+    //Borro el archivo
+    char* fileName = new char [20];
+	snprintf(fileName, 20, "SWAP._%d", (int) (spaceId));
+    if(!fileSystem->Remove(fileName)){
+        printf("Error eliminando el archivo %s\n",fileName);
+        ASSERT(false);
+    }
+    delete fileName;
+    #endif
+
+    //delete name;
+
+    #ifdef USER_PROGRAM  
     delete space;
-#endif
+    #endif
     delete threadTable;
     
     if (stack != NULL)

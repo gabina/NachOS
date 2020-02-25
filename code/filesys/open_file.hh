@@ -35,8 +35,6 @@ public:
     ~OpenFile() { Close(file); }
 
     int ReadAt(char *into, unsigned numBytes, unsigned position) {
-        //printf("file %d position %u:",file,position);
-        //printf(" En ReadAt\n");
         Lseek(file, position, 0);
         return ReadPartial(file, into, numBytes);
     }

@@ -53,6 +53,11 @@ int misses;
 int accesses;
 unsigned nextEntry;
 #endif
+
+#ifdef USE_VMEM
+List<Victim*> *victims;
+#endif
+
 // External definition, to allow us to take a pointer to this function.
 extern void Cleanup();
 
@@ -212,6 +217,10 @@ Initialize(int argc, char **argv)
 
 #ifdef NETWORK
     postOffice = new PostOffice(netname, rely, 10);
+#endif
+
+#ifdef USE_VMEM
+    victims = new List<Victim*>();
 #endif
 }
 

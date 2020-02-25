@@ -181,6 +181,11 @@ private:
 	///ID 
 	SpaceId spaceId;
 
+#ifdef USE_VMEM
+    /// El descriptor del archivo donde se hará el swap, correspondiente al address space.
+    OpenFile *swap;
+#endif
+
 #ifdef USER_PROGRAM
     /// User-level CPU register state.
     ///

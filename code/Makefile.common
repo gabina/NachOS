@@ -121,9 +121,9 @@ USERPROG_O = address_space.o \
              processTable.o\
              translate.o
 
-VMEM_H =
-VMEM_C =
-VMEM_O =
+VMEM_H = paging.hh
+VMEM_C = paging.cc
+VMEM_O = paging.o
 
 FILESYS_H = ../filesys/directory.hh   \
             ../filesys/file_header.hh \

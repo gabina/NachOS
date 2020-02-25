@@ -50,7 +50,6 @@ public:
 private:
     /// Puntero al ejecutable para poder cargar por demanda
     OpenFile *exec;
-
     /// Cabecera del ejecutable. Podría leerse de exec cada vez que sea necesario.
     /// Pero como representa una lectura de disco a memoria, es lenta y debería evitarse.
     NoffHeader noffH;
@@ -63,7 +62,6 @@ private:
 
     /// Number of pages in the virtual address space.
     unsigned numPages;
-
 };
 
 

@@ -12,10 +12,13 @@ typedef struct _Victim {
     unsigned virtualPage;
 } Victim;
 
+// Poner en -1 el proceso
+void DeleteID(Victim *v, void *arg);
+
 // para borrar todas las victimas correspondientes a un process
-void deleteVictims(List<Victim> victims, SpaceId proces) {
+void DeleteVictims(List<Victim*> victims, SpaceId process);
 
-}
-
+// Retorna la próxima víctica
+Victim GiveVictim(List<Victim*> victims);
 
 #endif

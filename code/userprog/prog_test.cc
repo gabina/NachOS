@@ -30,6 +30,24 @@ StartProcess(const char *filename)
     space = new AddressSpace(executable);
     currentThread->space = space;
 
+    #ifdef USER_PROGRAM
+    // Lo agrego a la tabla de procesos
+    processTable->NewProcess(currentThread);
+    #endif
+
+    #ifdef USE_VMEM
+    // Creo el archivo SWAP
+    char* fileName = new char [20];
+	snprintf(fileName, 20, "SWAP._%d", (int) (currentThread->spaceId));
+    if(!fileSystem->Create(fileName, 0)){
+		printf("Error al crear archivo del SWAP\n");
+		ASSERT(false);
+	}
+}
+
+    #endif
+
+
     /* No debería cerrar el archivo acá porque no puedo leer las páginas 
      * al implementar carga por demanda pura */
     //delete executable;
