@@ -149,6 +149,7 @@ AddressSpace::OnDemand(unsigned virtualPage)
   ASSERT(frame >= 0);
   pageTable[virtualPage].physicalPage = frame; 
 
+  printf("Ocupando marco %d\n",frame);
   /*Si la página a cargar pertenece al segmento de texto */
   if (virtualPage < numPagesCode)
     exec->ReadAt(&(machine->mainMemory[pageTable[virtualPage].physicalPage*PAGE_SIZE]),

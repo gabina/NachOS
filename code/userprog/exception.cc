@@ -228,7 +228,7 @@ ExceptionHandler(ExceptionType which)
 					/* spaceID no está seteado al spaceID del thread*/
 					SpaceId spaceID = processTable->NewProcess(t);
 
-					#ifdef USE_VMEM
+					#ifdef VMEM
 					// Creo el archivo SWAP
 					char* fileName = new char [20];
 					snprintf(fileName, 20, "SWAP._%d", (int) (t->spaceId));
@@ -274,14 +274,17 @@ ExceptionHandler(ExceptionType which)
 
 				// Calculate the virtual page number from the virtual address.
 				unsigned vpn = (unsigned) virtAddr / PAGE_SIZE;
-				
+				printf("PAGE FAULT\n");
 				/* Si la página no está marcada en la tabla como válida,
 				* entonces no está cargada en memoria y debo hacerlo*/
 				if (!pageTable[vpn].valid){
-					
-					#ifdef USE_VMEM
+					printf("La página no está cargada en memoria\n");
+					printf("%u\n",bitmap->NumClear());
+					#ifdef VMEM
+					printf("hola\n");
 					/* Si no hay marcos de memoria física disponibles*/
-					if(!bitmap->NumClear()){
+					if(bitmap->NumClear() == 0){
+						printf("Hola\n");
 						Victim *victim = GiveVictim(victims);
 						Thread *thread = GetProcess(victim->process);
 						TranslationEntry* pageTable = (thread->space)->pageTable;

@@ -35,7 +35,7 @@ StartProcess(const char *filename)
     processTable->NewProcess(currentThread);
     #endif
 
-    #ifdef USE_VMEM
+    #ifdef VMEM
     // Creo el archivo SWAP
     char* fileName = new char [20];
 	snprintf(fileName, 20, "SWAP._%d", (int) (currentThread->spaceId));

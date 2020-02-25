@@ -54,7 +54,7 @@ int accesses;
 unsigned nextEntry;
 #endif
 
-#ifdef USE_VMEM
+#ifdef VMEM
 List<Victim*> *victims;
 #endif
 
@@ -219,7 +219,7 @@ Initialize(int argc, char **argv)
     postOffice = new PostOffice(netname, rely, 10);
 #endif
 
-#ifdef USE_VMEM
+#ifdef VMEM
     victims = new List<Victim*>();
 #endif
 }

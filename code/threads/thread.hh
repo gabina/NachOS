@@ -181,7 +181,7 @@ private:
 	///ID 
 	SpaceId spaceId;
 
-#ifdef USE_VMEM
+#ifdef VMEM
     /// El descriptor del archivo donde se hará el swap, correspondiente al address space.
     OpenFile *swap;
 #endif

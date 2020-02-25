@@ -67,7 +67,7 @@ extern int accesses;
 extern unsigned nextEntry;
 #endif
 
-#ifdef USE_VMEM
+#ifdef VMEM
 extern List<Victim*> *victims;
 #endif
 

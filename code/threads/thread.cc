@@ -41,7 +41,7 @@ Thread::Thread(const char* threadName, Port * dadPort, int prio)
     space    = NULL;
     #endif
     join = false;
-    #ifdef USE_VMEM
+    #ifdef VMEM
     swap = NULL;
     #endif
 	/* Asigno prioridades. Por defecto es la 4 */
@@ -65,7 +65,7 @@ Thread::~Thread()
     DEBUG('t', "Deleting thread \"%s\"\n", name);
     ASSERT(this != currentThread);
 
-    #ifdef USE_VMEM
+    #ifdef VMEM
     //Elimino el proceso de la FIFO
     deleteVictims(victims,spaceId);
     //Cierro el archivo del SWAP
