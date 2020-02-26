@@ -44,6 +44,11 @@ public:
     /// Carga una página a la memoria - Carga por demanda
     void OnDemand(unsigned virtualPage);
 
+    #ifdef VMEM
+    /// Carga una página a la memoria desde el swap correspondiente 
+    void FromSwap(OpenFile *swap, unsigned virtualPage);
+    #endif
+
     /// Assume linear page table translation for now!
     /// It was private
     TranslationEntry *pageTable;

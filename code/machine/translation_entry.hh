@@ -47,6 +47,10 @@ public:
     /// contents of the page.
     bool readOnly;
 
+    #ifdef VMEM
+    /// Indica si se hizo swap de la página alguna vez
+    bool swap;
+    #endif
     /// This bit is set by the hardware every time the page is referenced or
     /// modified.
     bool use;

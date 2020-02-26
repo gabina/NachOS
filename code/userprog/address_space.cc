@@ -111,6 +111,9 @@ AddressSpace::AddressSpace(OpenFile *executable)
      * reservar un marco de memoria.  */
     pageTable[i].valid        = false;
     pageTable[i].use          = false;
+    #ifdef VMEM
+    pageTable[i].swap         = false;
+    #endif
     pageTable[i].dirty        = false;
     if (i < numPagesCode-1)
       pageTable[i].readOnly   = true;
@@ -139,7 +142,7 @@ AddressSpace::~AddressSpace()
   delete exec;
 }
 
-/* Carga la página virtual virtualPage a memoria, si corresponde a
+/* Carga la página virtual virtualPage a memoria desde el ejecutable, si corresponde a
  * datos o texto. En caso contrario, inicializa en cero. */
 void
 AddressSpace::OnDemand(unsigned virtualPage)
@@ -149,7 +152,7 @@ AddressSpace::OnDemand(unsigned virtualPage)
   ASSERT(frame >= 0);
   pageTable[virtualPage].physicalPage = frame; 
 
-  printf("Ocupando marco %d\n",frame);
+  printf("Ocupando marco desde OnDemand %d - vpn %u\n",frame,virtualPage);
   /*Si la página a cargar pertenece al segmento de texto */
   if (virtualPage < numPagesCode)
     exec->ReadAt(&(machine->mainMemory[pageTable[virtualPage].physicalPage*PAGE_SIZE]),
@@ -164,6 +167,27 @@ AddressSpace::OnDemand(unsigned virtualPage)
   pageTable[virtualPage].valid = true;    
 }
 
+#ifdef VMEM
+/* Carga la página virtual virtualPage a memoria desde el swap */
+void
+AddressSpace::FromSwap(OpenFile *swap, unsigned virtualPage)
+{
+  // Reservo un marco de memoria
+  int frame = bitmap->Find();
+  ASSERT(frame >= 0);
+  pageTable[virtualPage].physicalPage = frame; 
+  printf("Ocupando marco desde FromSwap %d - vpn %u\n",frame,virtualPage);
+
+  int block = PAGE_SIZE*virtualPage;
+  int read = swap->ReadAt(&(machine->mainMemory[pageTable[virtualPage].physicalPage*PAGE_SIZE]),
+                           PAGE_SIZE,block);
+  if(read != PAGE_SIZE)
+    ASSERT(false);
+  pageTable[virtualPage].use = false;
+  pageTable[virtualPage].dirty = false;
+  pageTable[virtualPage].valid = true;    
+}
+#endif
 /// Set the initial values for the user-level register set.
 ///
 /// We write these directly into the “machine” registers, so that we can

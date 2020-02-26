@@ -89,6 +89,7 @@ ExceptionHandler(ExceptionType which)
 					OpenFile * openFile = fileSystem->Open(nombre);
 					OpenFileTable* fileTable = currentThread->GetTable();
 					OpenFileId idFile = fileTable->NewOpenFile(openFile);
+					printf("Archivo abierto con idFile %d\n\n\n",idFile);
 					DEBUG('a',"File %s has been opened\n",nombre);
 					machine->WriteRegister(2, idFile);
 					}
@@ -100,6 +101,8 @@ ExceptionHandler(ExceptionType which)
 					int sizeRead;
 					char * localBuffer = new char [size];
 					
+					printf("Estoy en read\n");
+
 					/* Si el archivo a leer es la consola, utilizo la clase SynchConsole*/
 					if(idFile == 0){
 						char ch;
@@ -145,6 +148,9 @@ ExceptionHandler(ExceptionType which)
 					int sizeWritten, i;
 					char * localBuffer = new char [size];	
 					ReadBufferFromUser(buffer, localBuffer, size);
+
+					printf("Estoy en write. El idFile es %d\n",idFile);
+					printf("A escribir: %s\n",localBuffer);
 					if(idFile == 1){
 						for (i = 0; i < size; i++)
 							synchChonsole ->WriteChar(localBuffer[i]);
@@ -166,13 +172,15 @@ ExceptionHandler(ExceptionType which)
 						}
 						sizeWritten = openFile->Write(localBuffer, size);
 					}
-					machine->WriteRegister(2, sizeWritten);						
+					machine->WriteRegister(2, sizeWritten);	
+					printf("Salgo del write\n");					
 					}
 					break;
 				case SC_Close:{
 					OpenFileId fileID = (OpenFileId) machine->ReadRegister(4);
 					OpenFileTable* fileTable = currentThread->GetTable();
 					fileTable->CloseFile(fileID);
+					printf("Cerrando el archivo con idFile %d\n\n",fileID);
 					}
 					break;
 				case SC_Exit:{
@@ -269,47 +277,79 @@ ExceptionHandler(ExceptionType which)
 				// Leo la dirección que produjo la falla
 				int virtAddr = machine->ReadRegister(BAD_VADDR_REG);
 				// Recupero tabla de páginas
-				TranslationEntry *pageTable = (currentThread->space)->pageTable;
-
+				TranslationEntry *currentPageTable = (currentThread->space)->pageTable;
 				// Calculate the virtual page number from the virtual address.
 				unsigned vpn = (unsigned) virtAddr / PAGE_SIZE;
-				printf("PAGE FAULT\n");
+				//printf("PAGE FAULT en página virtual %u\n",vpn);
 				/* Si la página no está marcada en la tabla como válida,
 				* entonces no está cargada en memoria y debo hacerlo*/
-				if (!pageTable[vpn].valid){
-					printf("La página no está cargada en memoria\n");
+				if (!currentPageTable[vpn].valid){
+					printf("La página virtual %u no está cargada en memoria\n",vpn);
 					#ifdef VMEM
 					/* Si no hay marcos de memoria física disponibles*/
-					if(bitmap->NumClear() == 0){
-						printf("Voy a hacer swap\n");
+					if(!bitmap->NumClear()){
+						printf("No hay marcos disponibles. Voy a hacer swap\n");
 						Victim *victim = GiveVictim(victims);
-						Thread *thread = processTable->GetProcess(victim->process);
-						TranslationEntry* victimPageTable = (thread->space)->pageTable;
+						Thread *victimThread = processTable->GetProcess(victim->process);
+						TranslationEntry *victimPageTable = (victimThread->space)->pageTable;
 						unsigned physicalPage = victimPageTable[victim->virtualPage].physicalPage;
+						printf("La víctima es vpn %u\n",victim->virtualPage);
 						//TO DO: copiar la página en el archivo correspondiente y liberarla
 
 						//Abrir el archivo si aún no está abierto
-						if(thread->swap==NULL){
+						if(victimThread->swap==NULL){
+							printf("El archivo es nulo\n");
 							char* fileName = new char [20];
-							snprintf(fileName, 20, "SWAP._%d", (int) (thread->GetID()));
-							thread->swap = fileSystem->Open(fileName);
+							snprintf(fileName, 20, "SWAP._%d", (int) (victimThread->GetID()));
+							victimThread->swap = fileSystem->Open(fileName);
 							delete fileName;
 						}
-						int block = PAGE_SIZE*(victim->virtualPage);
-						printf("Virtual page: %d\n",victim->virtualPage);
-						(thread->swap)->WriteAt(&(machine->mainMemory[physicalPage]),
-												PAGE_SIZE,block);
+						/* Copio la página en el archivo corresondiente si nunca 
+						 * se hizo swap o si está sucia*/
+						if(!victimPageTable[victim->virtualPage].swap || victimPageTable[victim->virtualPage].dirty){
+							int block = PAGE_SIZE*(victim->virtualPage);
+							printf("Mando al swap - página virtual: %d- página física%d\n",victim->virtualPage,physicalPage);
+							int written = (victimThread->swap)->WriteAt(&(machine->mainMemory[physicalPage*PAGE_SIZE]),
+																		PAGE_SIZE,block);
+							if (written != PAGE_SIZE)
+								ASSERT(false);
+							// Indico que la página está en SWAP
+							victimPageTable[victim->virtualPage].swap = true;
+						}
+						/* Si la página víctima corresponde al mismo proceso que
+						 * el thread actual, entonces debo sacar de la TLB todas
+						 * las entradas correspondientes a la página virtual víctima*/
+						if(currentThread == victimThread){  
+							for(unsigned i = 0; i < TLB_SIZE; i++){
+      							if(machine->tlb[i].virtualPage == victim->virtualPage){
+									machine->tlb[i].valid = false;
+									printf("Sacando entradas de la TLB %u\n",victim->virtualPage);
+									break;
+								}
+							}
+						}
+
+						// Indico que la página no está en memoria
+						victimPageTable[victim->virtualPage].valid = false;
+						// Libero la página física
 						bitmap->Clear(physicalPage);
 					}
 					Victim *newVictim = new Victim;
 					newVictim->process = currentThread->GetID();
 					newVictim->virtualPage = vpn; 
 					victims->Append(newVictim);
+
+					//Debo carga la página en memoria
+					//Si el bit de swap está encendido, copiamos desde el swap
+					if(currentPageTable[vpn].swap)
+						(currentThread->space)->FromSwap(currentThread->swap,vpn);
+					else //cargo desde el ejecutable
+						(currentThread->space)->OnDemand(vpn);
 					#endif
-					(currentThread->space)->OnDemand(vpn);
 				}
 				// Cargo la entrada al TLB
-				(machine->tlb)[nextEntry] = pageTable[vpn];
+				(machine->tlb)[nextEntry] = currentPageTable[vpn];
+				//printf("Cargo en la TLB %d: física % u virtual %u\n",nextEntry,currentPageTable[vpn].physicalPage,vpn);
 				nextEntry = (nextEntry+1) %	TLB_SIZE;
 			#endif
 			}
