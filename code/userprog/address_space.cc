@@ -176,7 +176,7 @@ AddressSpace::FromSwap(OpenFile *swap, unsigned virtualPage)
   int frame = bitmap->Find();
   ASSERT(frame >= 0);
   pageTable[virtualPage].physicalPage = frame; 
-  printf("Ocupando marco desde FromSwap %d - vpn %u\n",frame,virtualPage);
+  //printf("Ocupando marco desde FromSwap %d - vpn %u\n",frame,virtualPage);
 
   int block = PAGE_SIZE*virtualPage;
   int read = swap->ReadAt(&(machine->mainMemory[pageTable[virtualPage].physicalPage*PAGE_SIZE]),
@@ -221,7 +221,15 @@ AddressSpace::InitRegisters()
 ///
 /// For now, nothing!
 void AddressSpace::SaveState()
-{}
+{
+  #ifdef USE_TLB
+    for(unsigned i = 0; i < TLB_SIZE; i++)
+      if(machine->tlb[i].valid && machine->tlb[i].dirty){
+        pageTable[machine->tlb[i].virtualPage].dirty = true;
+        printf("Enciendo\n");
+      }
+  #endif  
+}
 
 /// On a context switch, restore the machine state so that this address space
 /// can run.

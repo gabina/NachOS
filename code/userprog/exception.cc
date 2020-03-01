@@ -281,7 +281,7 @@ ExceptionHandler(ExceptionType which)
 				// Calculate the virtual page number from the virtual address.
 				unsigned vpn = (unsigned) virtAddr / PAGE_SIZE;
 				unsigned offset = (unsigned) virtAddr % PAGE_SIZE;
-				//printf("PAGE FAULT en página virtual %u offset %u\n",vpn,offset);
+				printf("PAGE FAULT en página virtual %u offset %u\n",vpn,offset);
 				/* Si la página no está marcada en la tabla como válida,
 				* entonces no está cargada en memoria y debo hacerlo*/
 				if (!currentPageTable[vpn].valid){
@@ -289,12 +289,12 @@ ExceptionHandler(ExceptionType which)
 					#ifdef VMEM
 					/* Si no hay marcos de memoria física disponibles*/
 					if(!bitmap->NumClear()){
-						//printf("No hay marcos disponibles. Voy a hacer swap\n");
+						printf("No hay marcos disponibles. Voy a hacer swap\n");
 						Victim *victim = GiveVictim(victims);
 						Thread *victimThread = processTable->GetProcess(victim->process);
 						TranslationEntry *victimPageTable = (victimThread->space)->pageTable;
 						unsigned physicalPage = victimPageTable[victim->virtualPage].physicalPage;
-						//printf("La víctima es vpn %u\n",victim->virtualPage);
+						printf("La víctima es vpn %u\n",victim->virtualPage);
 						//TO DO: copiar la página en el archivo correspondiente y liberarla
 
 						//Abrir el archivo si aún no está abierto
@@ -305,29 +305,32 @@ ExceptionHandler(ExceptionType which)
 							victimThread->swap = fileSystem->Open(fileName);
 							delete fileName;
 						}
-						/* Copio la página en el archivo corresondiente si nunca 
-						 * se hizo swap o si está sucia*/
-						/*if(!victimPageTable[victim->virtualPage].swap || victimPageTable[victim->virtualPage].dirty){*/
-						int block = PAGE_SIZE*(victim->virtualPage);
-						//printf("Mando al swap - página virtual: %d- página física%d\n",victim->virtualPage,physicalPage);
-						int written = (victimThread->swap)->WriteAt(&(machine->mainMemory[physicalPage*PAGE_SIZE]),
-																	PAGE_SIZE,block);
-						if (written != PAGE_SIZE)
-							ASSERT(false);
-						// Indico que la página está en SWAP
-						victimPageTable[victim->virtualPage].swap = true;
-						//}
 						/* Si la página víctima corresponde al mismo proceso que
 						 * el thread actual, entonces debo sacar de la TLB todas
 						 * las entradas correspondientes a la página virtual víctima*/
 						if(currentThread == victimThread){  
 							for(unsigned i = 0; i < TLB_SIZE; i++){
-      							if(machine->tlb[i].virtualPage == victim->virtualPage){
+      							if(machine->tlb[i].valid && (machine->tlb[i].virtualPage == victim->virtualPage)){
 									machine->tlb[i].valid = false;
-									//printf("Sacando entradas de la TLB %u\n",victim->virtualPage);
+									if ((machine->tlb)[i].dirty){
+										currentPageTable[victim->virtualPage].dirty = true;
+										printf("Enciendo\n");
+									}printf("Sacando entradas de la TLB %u\n",victim->virtualPage);
 									break;
 								}
 							}
+						}
+						/* Copio la página en el archivo corresondiente si nunca 
+						 * se hizo swap o si está sucia*/
+						if(!victimPageTable[victim->virtualPage].swap || victimPageTable[victim->virtualPage].dirty){
+							int block = PAGE_SIZE*(victim->virtualPage);
+							printf("Mando al swap - página virtual: %d- página física%d\n",victim->virtualPage,physicalPage);
+							int written = (victimThread->swap)->WriteAt(&(machine->mainMemory[physicalPage*PAGE_SIZE]),
+																		PAGE_SIZE,block);
+							if (written != PAGE_SIZE)
+								ASSERT(false);
+							// Indico que la página está en SWAP
+							victimPageTable[victim->virtualPage].swap = true;
 						}
 
 						// Indico que la página no está en memoria
@@ -348,6 +351,12 @@ ExceptionHandler(ExceptionType which)
 						(currentThread->space)->OnDemand(vpn);
 					#endif
 				}
+				//
+				if((machine->tlb)[nextEntry].valid &&  (machine->tlb)[nextEntry].dirty){
+					currentPageTable[(machine->tlb)[nextEntry].virtualPage].dirty = true;
+					printf("Enciendo\n");
+				}
+
 				// Cargo la entrada al TLB
 				(machine->tlb)[nextEntry] = currentPageTable[vpn];
 				//printf("Cargo en la TLB %d: física % u virtual %u\n",nextEntry,currentPageTable[vpn].physicalPage,vpn);
