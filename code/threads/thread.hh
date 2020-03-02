@@ -148,6 +148,7 @@ public:
 	Port* GetPort();
 
     #ifdef VMEM
+    void CreateSwapFile();
     /// El descriptor del archivo donde se hará el swap, correspondiente al address space.
     OpenFile *swap;
     #endif
@@ -220,6 +221,4 @@ extern "C" {
     // Stop running `oldThread` and start running `newThread`.
     void SWITCH(Thread *oldThread, Thread *newThread);
 }
-
-
 #endif

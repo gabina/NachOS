@@ -35,18 +35,10 @@ StartProcess(const char *filename)
     processTable->NewProcess(currentThread);
     #endif
 
-    #ifdef VMEM
-    // Creo el archivo SWAP
-    char* fileName = new char [20];
-	snprintf(fileName, 20, "SWAP._%d", (int) (currentThread->GetID()));
-    if(!fileSystem->Create(fileName, 0)){
-		printf("Error al crear archivo del SWAP\n");
-		ASSERT(false);
-	}
-    #endif
-    /* No debería cerrar el archivo acá porque no puedo leer las páginas 
-     * al implementar carga por demanda pura */
-    //delete executable;
+	#if VMEM
+	/* Crear el archivo swap para el nuevo thread*/
+	currentThread->CreateSwapFile();
+	#endif
 
     space->InitRegisters();  // Set the initial register values.
     space->RestoreState();   // Load page table register.

@@ -152,7 +152,7 @@ AddressSpace::OnDemand(unsigned virtualPage)
   ASSERT(frame >= 0);
   pageTable[virtualPage].physicalPage = frame; 
 
-  printf("Ocupando marco desde OnDemand %d - vpn %u\n",frame,virtualPage);
+  //printf("Ocupando marco desde OnDemand %d - vpn %u\n",frame,virtualPage);
   /*Si la página a cargar pertenece al segmento de texto */
   if (virtualPage < numPagesCode)
     exec->ReadAt(&(machine->mainMemory[pageTable[virtualPage].physicalPage*PAGE_SIZE]),
@@ -224,10 +224,9 @@ void AddressSpace::SaveState()
 {
   #ifdef USE_TLB
     for(unsigned i = 0; i < TLB_SIZE; i++)
-      if(machine->tlb[i].valid && machine->tlb[i].dirty){
-        pageTable[machine->tlb[i].virtualPage].dirty = true;
-        printf("Enciendo\n");
-      }
+      updatePT(pageTable, machine->tlb[i].virtualPage);
+      //if(machine->tlb[i].valid && machine->tlb[i].dirty)
+        //pageTable[machine->tlb[i].virtualPage].dirty = true;
   #endif  
 }
 

@@ -71,6 +71,7 @@ Machine::OneInstruction(Instruction *instr)
                             // future.
 
     // Fetch instruction.
+    //printf("Voy a leer una instrucción\n");
     if (!machine->ReadMem(registers[PC_REG], 4, &raw))
         return;  // Exception occurred.
     instr->value = raw;
@@ -80,7 +81,7 @@ Machine::OneInstruction(Instruction *instr)
         const struct OpString *str = &OP_STRINGS[(int) instr->opCode];
 
         ASSERT(instr->opCode <= MAX_OPCODE);
-        printf("At PC = 0x%X: ", registers[PC_REG]);
+        //printf("At PC = 0x%X: ", registers[PC_REG]);
         printf("Problem ");
         printf(str->string, instr->RegFromType(str->args[0]),
                instr->RegFromType(str->args[1]),
@@ -94,7 +95,6 @@ Machine::OneInstruction(Instruction *instr)
     int      sum, diff, tmp, value;
     unsigned rs, rt, imm;
 
-    //printf("En OneInstruction(%d)\n",instr->opCode);
     // Execute the instruction (cf. Kane's book).
     switch (instr->opCode) {
 
@@ -552,7 +552,8 @@ Machine::OneInstruction(Instruction *instr)
     }
 
     // Now we have successfully executed the instruction.
-
+    //printf("En OneInstruction(%d) pcAfter es %d\n",instr->opCode,pcAfter);
+    
     // Do any delayed load operation.
     DelayedLoad(nextLoadReg, nextLoadValue);
 

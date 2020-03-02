@@ -67,18 +67,18 @@ Thread::~Thread()
 
     #ifdef VMEM
     //Elimino el proceso de la FIFO
-    DeleteVictims(victims,spaceId);
+    DeleteVictims(spaceId);
     //Cierro el archivo del SWAP
     if(swap!=NULL)
         delete swap;
-    //Borro el archivo
-    char* fileName = new char [20];
-	snprintf(fileName, 20, "SWAP._%d", (int) (spaceId));
-    if(!fileSystem->Remove(fileName)){
-        printf("Error eliminando el archivo %s\n",fileName);
-        ASSERT(false);
-    }
+
+    /* Crea el archivo para hacer swap luego.
+     * Debería utilizarse RemoveSwapFile en paging.hh */
+    char* fileName = new char [MAX_NSWAP];
+    GiveSwapName(fileName,this);
+    fileSystem->Remove(fileName);
     delete fileName;
+    /* Fin RemoveSwapFile*/
     #endif
 
     //delete name;
@@ -406,4 +406,21 @@ Thread::RestoreUserState()
         machine->WriteRegister(i, userRegisters[i]);
 }
 
+#endif
+
+#ifdef VMEM
+void 
+Thread::CreateSwapFile()
+{
+    /* Crea el archivo para hacer swap luego.
+     * Debería utilizarse CreateSwapFile en paging.hh */
+    char* fileName = new char [MAX_NSWAP];
+    GiveSwapName(fileName,this);
+    fileSystem->Create(fileName, 0);
+    /* fin CreateSwapFile*/
+
+    /* Abro el archivo */
+	swap = fileSystem->Open(fileName);
+	delete fileName;    
+}
 #endif

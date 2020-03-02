@@ -7,6 +7,12 @@
 // for class List
 #include "../threads/list.hh"
 
+// for class Thread
+#include "../threads/thread.hh"
+
+//la cantidad de caracteres máxima que puede tener el nombre de un archivo swap
+#define MAX_NSWAP 10
+
 typedef struct _Victim {
     SpaceId process;
     unsigned virtualPage;
@@ -16,9 +22,23 @@ typedef struct _Victim {
 void DeleteID(Victim *v, void *arg);
 
 // para borrar todas las victimas correspondientes a un process
-void DeleteVictims(List<Victim*> *victims, SpaceId process);
+void DeleteVictims(SpaceId process);
 
 // Retorna la próxima víctima
-Victim *GiveVictim(List<Victim*> *victims);
+Victim *GiveVictim();
 
+// Dado un puntero a thread y un buffer, carga en el buffer el nombre del archivo swap
+void GiveSwapName(char *name, Thread *thread);
+
+// Crea el archivo swap
+bool CreateSwapFile(Thread *thread);
+
+// Elimino el archivo swap
+bool RemoveSwapFile(Thread *thread);
+
+void invalidateEntry(unsigned vpn);
+
+void updatePT(TranslationEntry *pageTable, unsigned vpn);
+
+bool toSwap(Thread *thread, unsigned vpn);
 #endif

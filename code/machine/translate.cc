@@ -264,6 +264,7 @@ Machine::Translate(unsigned virtAddr, unsigned *physAddr,
     entry->use = true;  // Set the `use`, `dirty` bits.
     if (writing)
         entry->dirty = true;
+
     *physAddr = pageFrame * PAGE_SIZE + offset;
     ASSERT(*physAddr >= 0 && *physAddr + size <= MEMORY_SIZE);
     DEBUG('a', "phys addr = 0x%X\n", *physAddr);
