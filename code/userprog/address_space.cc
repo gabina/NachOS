@@ -188,6 +188,12 @@ AddressSpace::FromSwap(OpenFile *swap, unsigned virtualPage)
   pageTable[virtualPage].valid = true;    
 }
 #endif
+
+unsigned 
+AddressSpace::GetNumPages()
+{
+  return numPages;
+}
 /// Set the initial values for the user-level register set.
 ///
 /// We write these directly into the “machine” registers, so that we can

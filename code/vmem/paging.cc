@@ -17,13 +17,48 @@ void DeleteVictims(SpaceId process)
 // Devuelve la primera víctima con un spaceID válido
 Victim* GiveVictim()
 {
+	bool victimFound = false;
     Victim *v;
-    v = victims->Remove();
-    while(v->process == -1)
-        v = victims->Remove();
-    return v;
+	List<Victim*> offVictims;
+    while(!victims->IsEmpty()){
+		v = victims->Remove();
+		if(v->process == -1)
+			continue;
+		Thread *thread = processTable->GetProcess(v->process);
+		TranslationEntry *pT = (thread->space)->pageTable;
+		/* Si el bit está prendido, lo apago y agrego el elemento nuevamente*/
+		if(pT[v->virtualPage].use){
+			//printf("VPN %u prendida\n",v->virtualPage);
+			SetUseBitOff(pT,v->virtualPage);
+			if( currentThread == thread)
+				SetUseBitOff(machine->tlb,FromVPNtoIndex(v->virtualPage));
+			// Los nodos apagados los acumulo en una lista
+			offVictims.Prepend(v);
+		}else{
+			victimFound = true;
+			break;
+		}
+	}
+
+	// Agrego los nodos ahora apagados
+	while(!offVictims.IsEmpty())
+		victims->Prepend(offVictims.Remove());
+
+	if(!victimFound)
+		return GiveVictim();		
+	return v;
 }
 
+void PrintVictim(Victim *v)
+{
+	printf("Proceso: %d VPN: %u| ",v->process,v->virtualPage);
+}
+
+void PrintVictims()
+{
+	victims->Apply(PrintVictim);
+	printf("\n");
+}
 // Dado un puntero a thread y un buffer, carga en el buffer el nombre del archivo swap
 void GiveSwapName(char *name, Thread *thread)
 {
@@ -48,9 +83,6 @@ bool RemoveSwapFile(Thread *thread)
     return ret;
 }
 
-/* Algunas funciones útiles para PAGE FAULT.
- * Ver si conviene ponerlas acá o en paging o en dónde */
-
 /* Invalida la entrada de la TLB correspondiente a la página virtual vpn
  * Si no existe la entrada, no hace nada*/
 void invalidateEntry(unsigned vpn)
@@ -66,12 +98,10 @@ void invalidateEntry(unsigned vpn)
 /* Actualiza la tabla de páginas respecto a la entrada en la TLB*/
 void updatePT(TranslationEntry *pageTable, unsigned vpn)
 {
-	for(unsigned i = 0; i < TLB_SIZE; i++){
-      	if(machine->tlb[i].valid && (machine->tlb[i].virtualPage == vpn)){
-			pageTable[vpn].dirty = machine->tlb[i].dirty;
-			pageTable[vpn].use = machine->tlb[i].use;
-			break;
-		}
+	int i = FromVPNtoIndex(vpn);
+	if(i!=-1){
+		pageTable[vpn].dirty = machine->tlb[i].dirty;
+		pageTable[vpn].use = machine->tlb[i].use;
 	}
 }
 
@@ -101,5 +131,28 @@ bool toSwap(Thread *thread, unsigned vpn)
 		bitmap->Clear(physicalPage);
 		return true;
 	}
+}
 
+int FromVPNtoIndex(unsigned vpn)
+{
+	for(unsigned i = 0; i < TLB_SIZE; i++)
+      	if(machine->tlb[i].valid && (machine->tlb[i].virtualPage == vpn))
+			return i;
+	return -1;	
+}
+
+void SetUseBitOff(TranslationEntry *table, int index)
+{
+	if(index >= 0)
+		table[index].use = false;
+}
+
+
+void SetAllUseBitOff(Thread *thread)
+{
+	TranslationEntry *pT = (thread->space)->pageTable;
+	for (unsigned i = 0; i < (thread->space)->GetNumPages(); i++)
+		SetUseBitOff(pT, i);
+	for (unsigned i = 0; i < TLB_SIZE; i++)
+		SetUseBitOff(machine->tlb, i);
 }

@@ -299,7 +299,8 @@ ExceptionHandler(ExceptionType which)
 					newVictim->process = currentThread->GetID();
 					newVictim->virtualPage = vpn; 
 					victims->Append(newVictim);
-
+					//printf("Agrego victima %u\n",vpn);
+					//PrintVictims();
 					//Debo carga la página en memoria
 					//Si el bit de swap está encendido, copiamos desde el swap
 					if(currentPageTable[vpn].swap)
