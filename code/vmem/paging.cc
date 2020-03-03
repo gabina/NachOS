@@ -26,7 +26,7 @@ Victim* GiveVictim()
 			continue;
 		Thread *thread = processTable->GetProcess(v->process);
 		TranslationEntry *pT = (thread->space)->pageTable;
-		/* Si el bit está prendido, lo apago y agrego el elemento nuevamente*/
+		/* Si el bit de uso está prendido, lo apago y agrego el elemento nuevamente*/
 		if(pT[v->virtualPage].use){
 			//printf("VPN %u prendida\n",v->virtualPage);
 			SetUseBitOff(pT,v->virtualPage);
@@ -35,8 +35,16 @@ Victim* GiveVictim()
 			// Los nodos apagados los acumulo en una lista
 			offVictims.Prepend(v);
 		}else{
+			if(v->dirty){
+				// Si la víctima pertenece al proceso actual, actualizo la TLB
+				if( currentThread == thread)
+					updatePT(pT,v->virtualPage);
+				v->dirty = false;
+				offVictims.Prepend(v);
+			}else{
 			victimFound = true;
 			break;
+			}
 		}
 	}
 
@@ -44,6 +52,7 @@ Victim* GiveVictim()
 	while(!offVictims.IsEmpty())
 		victims->Prepend(offVictims.Remove());
 
+	// Segunda oportunidad
 	if(!victimFound)
 		return GiveVictim();		
 	return v;

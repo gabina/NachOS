@@ -298,6 +298,7 @@ ExceptionHandler(ExceptionType which)
 					Victim *newVictim = new Victim;
 					newVictim->process = currentThread->GetID();
 					newVictim->virtualPage = vpn; 
+					newVictim->dirty = true;
 					victims->Append(newVictim);
 					//printf("Agrego victima %u\n",vpn);
 					//PrintVictims();

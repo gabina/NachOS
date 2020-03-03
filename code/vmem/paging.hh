@@ -16,6 +16,7 @@
 typedef struct _Victim {
     SpaceId process;
     unsigned virtualPage;
+    bool dirty;
 } Victim;
 
 // Poner en -1 el proceso
