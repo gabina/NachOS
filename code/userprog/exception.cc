@@ -315,7 +315,6 @@ ExceptionHandler(ExceptionType which)
 
 				// Cargo la entrada al TLB
 				(machine->tlb)[nextEntry] = currentPageTable[vpn];
-				//printf("Cargo en la TLB %d: física % u virtual %u\n",nextEntry,currentPageTable[vpn].physicalPage,vpn);
 				nextEntry = (nextEntry+1) %	TLB_SIZE;
 			#endif
 			}

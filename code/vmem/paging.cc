@@ -19,8 +19,7 @@ Victim* GiveVictim()
 {
 	bool victimFound = false;
     Victim *v;
-	List<Victim*> offVictims;
-    while(!victims->IsEmpty()){
+    while(!victimFound){
 		v = victims->Remove();
 		if(v->process == -1)
 			continue;
@@ -28,39 +27,33 @@ Victim* GiveVictim()
 		TranslationEntry *pT = (thread->space)->pageTable;
 		/* Si el bit de uso está prendido, lo apago y agrego el elemento nuevamente*/
 		if(pT[v->virtualPage].use){
-			//printf("VPN %u prendida\n",v->virtualPage);
 			SetUseBitOff(pT,v->virtualPage);
 			if( currentThread == thread)
 				SetUseBitOff(machine->tlb,FromVPNtoIndex(v->virtualPage));
 			// Los nodos apagados los acumulo en una lista
-			offVictims.Prepend(v);
+			victims->Append(v);
 		}else{
-			if(v->dirty){
+			// Actualizo el dirty bit en la tabla de páginas si la víctima 
+			// pertenece al mismo proceso. Si no, ya debería estar actualizado.
+			if(currentThread == thread)
+				updatePT(pT,v->virtualPage);
+			if(v->dirty && pT[v->virtualPage].dirty){
 				// Si la víctima pertenece al proceso actual, actualizo la TLB
-				if( currentThread == thread)
-					updatePT(pT,v->virtualPage);
 				v->dirty = false;
-				offVictims.Prepend(v);
-			}else{
-			victimFound = true;
-			break;
-			}
+				victims->Append(v);
+			}else
+				victimFound = true;
 		}
 	}
-
-	// Agrego los nodos ahora apagados
-	while(!offVictims.IsEmpty())
-		victims->Prepend(offVictims.Remove());
-
-	// Segunda oportunidad
-	if(!victimFound)
-		return GiveVictim();		
+	
 	return v;
 }
 
 void PrintVictim(Victim *v)
 {
-	printf("Proceso: %d VPN: %u| ",v->process,v->virtualPage);
+	Thread *thread = processTable->GetProcess(v->process);
+	TranslationEntry *pT = (thread->space)->pageTable;
+	printf("Proceso: %d VPN: %u uso: %u dirty: %u| ",v->process,v->virtualPage,pT[v->virtualPage].use,v->dirty);
 }
 
 void PrintVictims()
@@ -156,7 +149,6 @@ void SetUseBitOff(TranslationEntry *table, int index)
 		table[index].use = false;
 }
 
-
 void SetAllUseBitOff(Thread *thread)
 {
 	TranslationEntry *pT = (thread->space)->pageTable;
@@ -164,4 +156,10 @@ void SetAllUseBitOff(Thread *thread)
 		SetUseBitOff(pT, i);
 	for (unsigned i = 0; i < TLB_SIZE; i++)
 		SetUseBitOff(machine->tlb, i);
+}
+
+void DiscardAcessess()
+{
+    if(ratio)
+        accesses --;
 }

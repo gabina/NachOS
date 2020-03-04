@@ -98,8 +98,8 @@ Machine::ReadMem(unsigned addr, unsigned size, int *value)
 
     #ifdef USE_TLB
     // Cuento un nuevo acceso
-        if(ratio)					
-            accesses ++;
+    if(ratio)					
+        accesses ++;
     #endif
     exception = Translate(addr, &physicalAddress, size, false);
     if (exception != NO_EXCEPTION) {
@@ -147,8 +147,8 @@ Machine::WriteMem(unsigned addr, unsigned size, int value)
     DEBUG('a', "Writing VA 0x%X, size %u, value 0x%X\n", addr, size, value);
     #ifdef USE_TLB
     // Cuento un nuevo acceso
-        if(ratio)					
-            accesses ++;
+    if(ratio)					
+        accesses ++;
     #endif
     
     exception = Translate(addr, &physicalAddress, size, true);
@@ -216,8 +216,6 @@ Machine::Translate(unsigned virtAddr, unsigned *physAddr,
     vpn    = (unsigned) virtAddr / PAGE_SIZE;
     offset = (unsigned) virtAddr % PAGE_SIZE;
 
-    //if(!vpn && !writing)
-      //  printf("Soy %s y estoy leyendo en la página física 0\n",currentThread->GetName());
     if (tlb == NULL) {// => page table => `vpn` is index into table.
         DEBUG('a', "Tabla de páginas\n");
         if (vpn >= pageTableSize) {

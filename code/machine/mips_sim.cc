@@ -214,8 +214,10 @@ Machine::OneInstruction(Instruction *instr)
         case OP_LB:
         case OP_LBU:
             tmp = registers[(int) instr->rs] + instr->extra;
-            if (!machine->ReadMem(tmp, 1, &value))
+            if (!machine->ReadMem(tmp, 1, &value)){
+                DiscardAcessess();
                 return;
+            }
 
             if ((value & 0x80) && (instr->opCode == OP_LB))
                 value |= 0xFFFFFF00;
@@ -232,8 +234,10 @@ Machine::OneInstruction(Instruction *instr)
                 RaiseException(ADDRESS_ERROR_EXCEPTION, tmp);
                 return;
             }
-            if (!machine->ReadMem(tmp, 2, &value))
+            if (!machine->ReadMem(tmp, 2, &value)){
+                DiscardAcessess();
                 return;
+            }
 
             if ((value & 0x8000) && (instr->opCode == OP_LH))
                 value |= 0xFFFF0000;
@@ -254,8 +258,10 @@ Machine::OneInstruction(Instruction *instr)
                 RaiseException(ADDRESS_ERROR_EXCEPTION, tmp);
                 return;
             }
-            if (!machine->ReadMem(tmp, 4, &value))
+            if (!machine->ReadMem(tmp, 4, &value)){
+                DiscardAcessess();
                 return;
+            }
             nextLoadReg = instr->rt;
             nextLoadValue = value;
             break;
@@ -268,8 +274,10 @@ Machine::OneInstruction(Instruction *instr)
             // would fail (I think) if the other cases are ever exercised.
             ASSERT((tmp & 0x3) == 0);
 
-            if (!machine->ReadMem(tmp, 4, &value))
+            if (!machine->ReadMem(tmp, 4, &value)){
+                DiscardAcessess();
                 return;
+            }
             if (registers[LOAD_REG] == instr->rt)
                 nextLoadValue = registers[LOAD_VALUE_REG];
             else
@@ -299,8 +307,10 @@ Machine::OneInstruction(Instruction *instr)
             // would fail (I think) if the other cases are ever exercised.
             ASSERT((tmp & 0x3) == 0);
 
-            if (!machine->ReadMem(tmp, 4, &value))
+            if (!machine->ReadMem(tmp, 4, &value)){
+                DiscardAcessess();
                 return;
+            }
             if (registers[LOAD_REG] == instr->rt)
                 nextLoadValue = registers[LOAD_VALUE_REG];
             else
@@ -369,15 +379,19 @@ Machine::OneInstruction(Instruction *instr)
         case OP_SB:
             if (!machine->WriteMem((unsigned) (registers[(int) instr->rs]
                                                + instr->extra),
-                                   1, registers[(int)instr->rt]))
+                                   1, registers[(int)instr->rt])){
+                DiscardAcessess();
                 return;
+            }
             break;
 
         case OP_SH:
             if (!machine->WriteMem((unsigned) (registers[(int) instr->rs]
                                                + instr->extra),
-                                   2, registers[(int) instr->rt]))
+                                   2, registers[(int) instr->rt])){
+                DiscardAcessess();
                 return;
+            }
             break;
 
         case OP_SLL:
@@ -465,8 +479,10 @@ Machine::OneInstruction(Instruction *instr)
         case OP_SW:
             if (!machine->WriteMem((unsigned) (registers[(int) instr->rs]
                                                + instr->extra),
-                                   4, registers[(int) instr->rt]))
+                                   4, registers[(int) instr->rt])){
+                DiscardAcessess();                       
                 return;
+            }
             break;
 
         case OP_SWL:
@@ -476,8 +492,10 @@ Machine::OneInstruction(Instruction *instr)
             // the other cases are ever exercised.
             ASSERT((tmp & 0x3) == 0);
 
-            if (!machine->ReadMem((tmp & ~0x3), 4, &value))
+            if (!machine->ReadMem((tmp & ~0x3), 4, &value)){
+                DiscardAcessess();
                 return;
+            }
             switch (tmp & 0x3) {
                 case 0:
                     value = registers[(int) instr->rt];
@@ -495,8 +513,10 @@ Machine::OneInstruction(Instruction *instr)
                             | (registers[(int) instr->rt] >> 24 & 0xFF);
                     break;
             }
-            if (!machine->WriteMem(tmp & ~0x3, 4, value))
+            if (!machine->WriteMem(tmp & ~0x3, 4, value)){
+                DiscardAcessess();
                 return;
+            }
             break;
 
         case OP_SWR:
@@ -506,8 +526,10 @@ Machine::OneInstruction(Instruction *instr)
             // the other cases are ever exercised.
             ASSERT((tmp & 0x3) == 0);
 
-            if (!machine->ReadMem((tmp & ~0x3), 4, &value))
+            if (!machine->ReadMem((tmp & ~0x3), 4, &value)){
+                DiscardAcessess();
                 return;
+            }
             switch (tmp & 0x3) {
                 case 0:
                     value = (value & 0xFFFFFF)
@@ -524,8 +546,10 @@ Machine::OneInstruction(Instruction *instr)
                     value = registers[(int) instr->rt];
                     break;
             }
-            if (!machine->WriteMem(tmp & ~0x3, 4, value))
+            if (!machine->WriteMem(tmp & ~0x3, 4, value)){
+                DiscardAcessess();
                 return;
+            }
             break;
 
         case OP_SYSCALL:

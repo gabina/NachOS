@@ -61,4 +61,7 @@ void SetUseBitOff(TranslationEntry *table, int index);
 
 // Apaga los bits de uso en la tabla de páginas y en la TLB
 void SetAllUseBitOff(Thread *thread);
+
+//
+void DiscardAcessess();
 #endif
