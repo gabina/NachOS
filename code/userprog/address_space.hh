@@ -42,13 +42,13 @@ public:
     void RestoreState();
 
     /// Carga una página a la memoria - Carga por demanda
-    void OnDemand(unsigned virtualPage);
+    int OnDemand(unsigned virtualPage);
 
     unsigned GetNumPages();
 
     #ifdef VMEM
     /// Carga una página a la memoria desde el swap correspondiente 
-    void FromSwap(OpenFile *swap, unsigned virtualPage);
+    int FromSwap(OpenFile *swap, unsigned virtualPage);
     #endif
 
     /// Assume linear page table translation for now!

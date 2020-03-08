@@ -215,7 +215,7 @@ Machine::OneInstruction(Instruction *instr)
         case OP_LBU:
             tmp = registers[(int) instr->rs] + instr->extra;
             if (!machine->ReadMem(tmp, 1, &value)){
-                DiscardAcessess();
+                DiscardAccesses();
                 return;
             }
 
@@ -235,7 +235,7 @@ Machine::OneInstruction(Instruction *instr)
                 return;
             }
             if (!machine->ReadMem(tmp, 2, &value)){
-                DiscardAcessess();
+                DiscardAccesses();
                 return;
             }
 
@@ -259,7 +259,7 @@ Machine::OneInstruction(Instruction *instr)
                 return;
             }
             if (!machine->ReadMem(tmp, 4, &value)){
-                DiscardAcessess();
+                DiscardAccesses();
                 return;
             }
             nextLoadReg = instr->rt;
@@ -275,7 +275,7 @@ Machine::OneInstruction(Instruction *instr)
             ASSERT((tmp & 0x3) == 0);
 
             if (!machine->ReadMem(tmp, 4, &value)){
-                DiscardAcessess();
+                DiscardAccesses();
                 return;
             }
             if (registers[LOAD_REG] == instr->rt)
@@ -308,7 +308,7 @@ Machine::OneInstruction(Instruction *instr)
             ASSERT((tmp & 0x3) == 0);
 
             if (!machine->ReadMem(tmp, 4, &value)){
-                DiscardAcessess();
+                DiscardAccesses();
                 return;
             }
             if (registers[LOAD_REG] == instr->rt)
@@ -380,7 +380,7 @@ Machine::OneInstruction(Instruction *instr)
             if (!machine->WriteMem((unsigned) (registers[(int) instr->rs]
                                                + instr->extra),
                                    1, registers[(int)instr->rt])){
-                DiscardAcessess();
+                DiscardAccesses();
                 return;
             }
             break;
@@ -389,7 +389,7 @@ Machine::OneInstruction(Instruction *instr)
             if (!machine->WriteMem((unsigned) (registers[(int) instr->rs]
                                                + instr->extra),
                                    2, registers[(int) instr->rt])){
-                DiscardAcessess();
+                DiscardAccesses();
                 return;
             }
             break;
@@ -480,7 +480,7 @@ Machine::OneInstruction(Instruction *instr)
             if (!machine->WriteMem((unsigned) (registers[(int) instr->rs]
                                                + instr->extra),
                                    4, registers[(int) instr->rt])){
-                DiscardAcessess();                       
+                DiscardAccesses();                       
                 return;
             }
             break;
@@ -493,7 +493,7 @@ Machine::OneInstruction(Instruction *instr)
             ASSERT((tmp & 0x3) == 0);
 
             if (!machine->ReadMem((tmp & ~0x3), 4, &value)){
-                DiscardAcessess();
+                DiscardAccesses();
                 return;
             }
             switch (tmp & 0x3) {
@@ -514,7 +514,7 @@ Machine::OneInstruction(Instruction *instr)
                     break;
             }
             if (!machine->WriteMem(tmp & ~0x3, 4, value)){
-                DiscardAcessess();
+                DiscardAccesses();
                 return;
             }
             break;
@@ -527,7 +527,7 @@ Machine::OneInstruction(Instruction *instr)
             ASSERT((tmp & 0x3) == 0);
 
             if (!machine->ReadMem((tmp & ~0x3), 4, &value)){
-                DiscardAcessess();
+                DiscardAccesses();
                 return;
             }
             switch (tmp & 0x3) {
@@ -547,7 +547,7 @@ Machine::OneInstruction(Instruction *instr)
                     break;
             }
             if (!machine->WriteMem(tmp & ~0x3, 4, value)){
-                DiscardAcessess();
+                DiscardAccesses();
                 return;
             }
             break;

@@ -144,7 +144,7 @@ AddressSpace::~AddressSpace()
 
 /* Carga la página virtual virtualPage a memoria desde el ejecutable, si corresponde a
  * datos o texto. En caso contrario, inicializa en cero. */
-void
+int
 AddressSpace::OnDemand(unsigned virtualPage)
 {
   // Reservo un marco de memoria
@@ -164,12 +164,13 @@ AddressSpace::OnDemand(unsigned virtualPage)
     else /* Inicializo en cero */
       memset(machine->mainMemory + (pageTable[virtualPage].physicalPage)*PAGE_SIZE, 0, PAGE_SIZE);
   
-  pageTable[virtualPage].valid = true;    
+  pageTable[virtualPage].valid = true;  
+  return frame;  
 }
 
 #ifdef VMEM
 /* Carga la página virtual virtualPage a memoria desde el swap */
-void
+int
 AddressSpace::FromSwap(OpenFile *swap, unsigned virtualPage)
 {
   // Reservo un marco de memoria
@@ -186,6 +187,7 @@ AddressSpace::FromSwap(OpenFile *swap, unsigned virtualPage)
   pageTable[virtualPage].use = false;
   pageTable[virtualPage].dirty = false;
   pageTable[virtualPage].valid = true;    
+  return frame;
 }
 #endif
 

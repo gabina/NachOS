@@ -168,7 +168,7 @@ Thread::Finish(int stat)
              *Están contados dos veces */
             accesses = accesses - misses;
             int hits = accesses - misses;
-            printf("Accesos %d, Hits %d, Ratio hits %f\n",accesses,hits, (float (hits))/accesses);
+            printf("Accesos %d, Hits %d, Ratio hits %f, Accesos a disco %d\n",accesses,hits, (float (hits))/accesses,diskAccesses);
         }
     #endif
 	/* Aviso que terminé, si se hizo Join */

@@ -65,11 +65,15 @@ extern bool ratio;
 extern int misses;
 extern int accesses;
 extern unsigned nextEntry;
+extern int diskAccesses;
+extern bool tracePages;
 #endif
 
 #ifdef VMEM
 #include "vmem/paging.hh"
 extern List<Victim*> *victims;
+extern Victim **victimsArray;
+extern int victimPointer;
 #endif
 
 #endif

@@ -25,8 +25,17 @@ void DeleteID(Victim *v, void *arg);
 // para borrar todas las victimas correspondientes a un process
 void DeleteVictims(SpaceId process);
 
+// Retorna la pŕoxima víctima utilizando FIFO
+Victim* GiveVictimFIFO();
+
 // Retorna la próxima víctima
 Victim *GiveVictim();
+
+// Actualiza el puntero a la próxima víctima
+void UpdatePointer();
+
+// Retorna la página física de la próxima víctima.
+int GiveVictimArray();
 
 // Imprime un elemento de tipo Victim
 void PrintVictim(Victim *v);
@@ -63,5 +72,5 @@ void SetUseBitOff(TranslationEntry *table, int index);
 void SetAllUseBitOff(Thread *thread);
 
 //
-void DiscardAcessess();
+void DiscardAccesses();
 #endif

@@ -257,6 +257,7 @@ ExceptionHandler(ExceptionType which)
 			La nueva entrada debe ser agregada a la TLB*/
 
 			#ifdef USE_TLB
+				int frame;
 				// Cuento un nuevo miss
 				if(ratio)					
 					misses ++;
@@ -266,6 +267,11 @@ ExceptionHandler(ExceptionType which)
 				TranslationEntry *currentPageTable = (currentThread->space)->pageTable;
 				// Calculate the virtual page number from the virtual address.
 				unsigned vpn = (unsigned) virtAddr / PAGE_SIZE;
+
+				if (tracePages) {
+					printf("VPN_ACCESS**%d\n", vpn);
+				}
+
 				//unsigned offset = (unsigned) virtAddr % PAGE_SIZE;
 				//printf("PAGE FAULT en página virtual %u offset %u\n",vpn,offset);
 				/* Si la página no está marcada en la tabla como válida,
@@ -276,10 +282,11 @@ ExceptionHandler(ExceptionType which)
 					/* Si no hay marcos de memoria física disponibles*/
 					if(!bitmap->NumClear()){
 						//printf("No hay marcos disponibles. Voy a hacer swap\n");
-						Victim *victim = GiveVictim();
+						int physicalPage = GiveVictimArray();
+						Victim *victim = victimsArray[physicalPage];
 						Thread *victimThread = processTable->GetProcess(victim->process);
 						TranslationEntry *victimPageTable = (victimThread->space)->pageTable;
-						unsigned physicalPage = victimPageTable[victim->virtualPage].physicalPage;
+						//unsigned physicalPage = victimPageTable[victim->virtualPage].physicalPage;
 						//printf("La víctima es vpn %u\n",victim->virtualPage);
 						//TO DO: copiar la página en el archivo correspondiente y liberarla
 
@@ -295,19 +302,26 @@ ExceptionHandler(ExceptionType which)
 						/* Muevo la página de la memoria al swap*/
 						toSwap(victimThread, victim->virtualPage);
 					}
-					Victim *newVictim = new Victim;
-					newVictim->process = currentThread->GetID();
-					newVictim->virtualPage = vpn; 
-					newVictim->dirty = true;
-					victims->Append(newVictim);
-					//printf("Agrego victima %u\n",vpn);
-					//PrintVictims();
 					//Debo carga la página en memoria
 					//Si el bit de swap está encendido, copiamos desde el swap
 					if(currentPageTable[vpn].swap)
-						(currentThread->space)->FromSwap(currentThread->swap,vpn);
+						frame = (currentThread->space)->FromSwap(currentThread->swap,vpn);
 					else //cargo desde el ejecutable
-						(currentThread->space)->OnDemand(vpn);
+						frame = (currentThread->space)->OnDemand(vpn);
+
+
+					/*Victim *newVictim = new Victim;
+					newVictim->process = currentThread->GetID();
+					newVictim->virtualPage = vpn; 
+					newVictim->dirty = true;
+					victims->Append(newVictim);*/
+
+					victimsArray[frame]->process = currentThread->GetID();
+					victimsArray[frame]->virtualPage = vpn; 
+					victimsArray[frame]->dirty = true;
+
+					//printf("Agrego victima %u\n",vpn);
+					//PrintVictims();	
 					#endif
 				}
 				// Actualizo la tabla de páginas de la entrada que voy a reemplazar

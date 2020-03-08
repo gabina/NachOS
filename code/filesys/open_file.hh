@@ -20,8 +20,12 @@
 #define NACHOS_FILESYS_OPENFILE__HH
 
 
-#include "threads/utility.hh"
+#include "../threads/utility.hh"
 
+// Esto deberia reemplazarse a traves de un #include "../threads/system.hh"
+// pero lo dejamos asi porque no anda bien
+extern bool ratio;
+extern int diskAccesses;
 
 #ifdef FILESYS_STUB  // Temporarily implement calls to Nachos file system as
                      // calls to UNIX!  See definitions listed under `#else`.
@@ -35,10 +39,18 @@ public:
     ~OpenFile() { Close(file); }
 
     int ReadAt(char *into, unsigned numBytes, unsigned position) {
+        #ifdef USE_TLB
+        if(ratio)					
+		    diskAccesses ++;
+        #endif
         Lseek(file, position, 0);
         return ReadPartial(file, into, numBytes);
     }
     int WriteAt(const char *from, unsigned numBytes, unsigned position) {
+        #ifdef USE_TLB
+        if(ratio)					
+		    diskAccesses ++;
+        #endif
         Lseek(file, position, 0);
         WriteFile(file, from, numBytes);
         return numBytes;

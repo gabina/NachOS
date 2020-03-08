@@ -52,10 +52,14 @@ bool ratio = false;
 int misses;
 int accesses;
 unsigned nextEntry;
+int diskAccesses;
+bool tracePages = false;
 #endif
 
 #ifdef VMEM
 List<Victim*> *victims;
+Victim **victimsArray;
+int victimPointer;
 #endif
 
 // External definition, to allow us to take a pointer to this function.
@@ -149,6 +153,11 @@ Initialize(int argc, char **argv)
             ratio = true;
             misses = 0;
             accesses = 0;
+            diskAccesses = 0;
+        }
+
+        if (!strcmp(*argv, "-trace")) {
+            tracePages = true;
         }
 #endif        
 #ifdef USER_PROGRAM
@@ -221,6 +230,10 @@ Initialize(int argc, char **argv)
 
 #ifdef VMEM
     victims = new List<Victim*>();
+    victimsArray = new Victim* [NUM_PHYS_PAGES];
+    for(unsigned i = 0; i < NUM_PHYS_PAGES; i++)
+        victimsArray[i] = new Victim;
+    victimPointer = 0;
 #endif
 }
 

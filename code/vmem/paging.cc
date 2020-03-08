@@ -15,6 +15,60 @@ void DeleteVictims(SpaceId process)
 }
 
 // Devuelve la primera víctima con un spaceID válido
+Victim* GiveVictimFIFO()
+{
+    Victim *v;
+    v = victims->Remove();
+    while(v->process == -1)
+        v = victims->Remove();
+    return v;
+} 
+
+void UpdatePointer()
+{
+	victimPointer = (victimPointer + 1) % NUM_PHYS_PAGES;
+}
+
+// Devuelve la primera víctima con un spaceID válido
+int GiveVictimArray()
+{
+	int pointer;
+	bool victimFound = false;
+    Victim *v;
+    while(!victimFound){
+		v = victimsArray[victimPointer];
+		if(v->process == -1)
+			continue;
+		Thread *thread = processTable->GetProcess(v->process);
+		TranslationEntry *pT = (thread->space)->pageTable;
+		// Actualizo los use y dirty bits en la tabla de páginas si la víctima 
+		// pertenece al mismo proceso. Si no, ya deberían estar actualizados.
+		if(currentThread == thread)
+			updatePT(pT,v->virtualPage);
+		/* Si el bit de uso está prendido, lo apago y agrego el elemento nuevamente*/
+		if(pT[v->virtualPage].use){
+			SetUseBitOff(pT,v->virtualPage);
+			if( currentThread == thread)
+				SetUseBitOff(machine->tlb,FromVPNtoIndex(v->virtualPage));
+			// Los nodos apagados los acumulo en una lista
+			UpdatePointer();
+		}else{
+			if(v->dirty && pT[v->virtualPage].dirty){
+				// Si la víctima pertenece al proceso actual, actualizo la TLB
+				v->dirty = false;
+				UpdatePointer();
+			}else{
+				victimFound = true;
+				pointer = victimPointer;
+				UpdatePointer();
+			}
+		}
+	}
+	
+	return pointer;
+}
+
+// Devuelve la primera víctima con un spaceID válido
 Victim* GiveVictim()
 {
 	bool victimFound = false;
@@ -25,6 +79,10 @@ Victim* GiveVictim()
 			continue;
 		Thread *thread = processTable->GetProcess(v->process);
 		TranslationEntry *pT = (thread->space)->pageTable;
+		// Actualizo los use y dirty bits en la tabla de páginas si la víctima 
+		// pertenece al mismo proceso. Si no, ya deberían estar actualizados.
+		if(currentThread == thread)
+			updatePT(pT,v->virtualPage);
 		/* Si el bit de uso está prendido, lo apago y agrego el elemento nuevamente*/
 		if(pT[v->virtualPage].use){
 			SetUseBitOff(pT,v->virtualPage);
@@ -33,10 +91,6 @@ Victim* GiveVictim()
 			// Los nodos apagados los acumulo en una lista
 			victims->Append(v);
 		}else{
-			// Actualizo el dirty bit en la tabla de páginas si la víctima 
-			// pertenece al mismo proceso. Si no, ya debería estar actualizado.
-			if(currentThread == thread)
-				updatePT(pT,v->virtualPage);
 			if(v->dirty && pT[v->virtualPage].dirty){
 				// Si la víctima pertenece al proceso actual, actualizo la TLB
 				v->dirty = false;
@@ -158,7 +212,7 @@ void SetAllUseBitOff(Thread *thread)
 		SetUseBitOff(machine->tlb, i);
 }
 
-void DiscardAcessess()
+void DiscardAccesses()
 {
     if(ratio)
         accesses --;
