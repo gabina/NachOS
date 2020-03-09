@@ -96,16 +96,21 @@ Machine::ReadMem(unsigned addr, unsigned size, int *value)
 
     DEBUG('a', "Reading VA 0x%X, size %u\n", addr, size);
 
-    #ifdef USE_TLB
-    // Cuento un nuevo acceso
-    if(ratio)					
-        accesses ++;
-    #endif
     exception = Translate(addr, &physicalAddress, size, false);
     if (exception != NO_EXCEPTION) {
         machine->RaiseException(exception, addr);
         return false;
     }
+    #ifdef USE_TLB
+    // Cuento un nuevo acceso
+    if(ratio)					
+        accesses ++;
+
+    if (tracePages) {
+        int vpn = addr / PAGE_SIZE;
+        printf("VPN_ACCESS**%d\n", vpn);
+    }
+    #endif
     switch (size) {
         case 1:
             data = machine->mainMemory[physicalAddress];
@@ -145,17 +150,20 @@ Machine::WriteMem(unsigned addr, unsigned size, int value)
     unsigned      physicalAddress;
 
     DEBUG('a', "Writing VA 0x%X, size %u, value 0x%X\n", addr, size, value);
-    #ifdef USE_TLB
-    // Cuento un nuevo acceso
-    if(ratio)					
-        accesses ++;
-    #endif
-    
     exception = Translate(addr, &physicalAddress, size, true);
     if (exception != NO_EXCEPTION) {
         machine->RaiseException(exception, addr);
         return false;
     }
+    #ifdef USE_TLB
+    // Cuento un nuevo acceso
+    if(ratio)					
+        accesses ++;
+    if (tracePages) {
+        int vpn = addr / PAGE_SIZE;
+        printf("VPN_ACCESS**%d\n", vpn);
+    }
+    #endif
     switch (size) {
         case 1:
             machine->mainMemory[physicalAddress]
@@ -260,9 +268,10 @@ Machine::Translate(unsigned virtAddr, unsigned *physAddr,
         return BUS_ERROR_EXCEPTION;
     }
     entry->use = true;  // Set the `use`, `dirty` bits.
-    if (writing)
+    if (writing){
         entry->dirty = true;
-
+        DEBUG('g', "Prendo dirty bit en VPN %d\n",vpn);
+    }
     *physAddr = pageFrame * PAGE_SIZE + offset;
     ASSERT(*physAddr >= 0 && *physAddr + size <= MEMORY_SIZE);
     DEBUG('a', "phys addr = 0x%X\n", *physAddr);

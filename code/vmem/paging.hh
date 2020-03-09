@@ -43,6 +43,8 @@ void PrintVictim(Victim *v);
 // Imprime la lista victims
 void PrintVictims();
 
+void PrintVictimsArray();
+
 // Dado un puntero a thread y un buffer, carga en el buffer el nombre del archivo swap
 void GiveSwapName(char *name, Thread *thread);
 

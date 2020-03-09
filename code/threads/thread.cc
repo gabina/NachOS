@@ -166,9 +166,11 @@ Thread::Finish(int stat)
         if(ratio){
             /* Los fallos de página vuelven a acceder a la memoria.
              *Están contados dos veces */
-            accesses = accesses - misses;
+            // comentado porque movimos los contadores de accesses a WriteMem y ReadMem:
+            // accesses = accesses - misses;
             int hits = accesses - misses;
             printf("Accesos %d, Hits %d, Ratio hits %f, Accesos a disco %d\n",accesses,hits, (float (hits))/accesses,diskAccesses);
+            //exit(1); // TODO: sacar esto
         }
     #endif
 	/* Aviso que terminé, si se hizo Join */

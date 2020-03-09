@@ -84,7 +84,7 @@ AddressSpace::AddressSpace(OpenFile *executable)
 	size = sizeData + sizeCode + sizeZero;
 	numPages = numPagesCode + numPagesData + numPagesZero;
 
-  printf("Páginas totales %d, Data %d, Código %d, Otros %d\n",
+  DEBUG('g',"Páginas totales %d, Data %d, Código %d, Otros %d\n",
   numPages, numPagesData, numPagesCode, numPagesZero);
 
 	/* Controlo que el size sea menor o igual a 

@@ -29,7 +29,7 @@ void UpdatePointer()
 	victimPointer = (victimPointer + 1) % NUM_PHYS_PAGES;
 }
 
-// Devuelve la primera víctima con un spaceID válido
+// Devuelve el marco de memoria físico de la victima
 int GiveVictimArray()
 {
 	int pointer;
@@ -50,12 +50,14 @@ int GiveVictimArray()
 			SetUseBitOff(pT,v->virtualPage);
 			if( currentThread == thread)
 				SetUseBitOff(machine->tlb,FromVPNtoIndex(v->virtualPage));
+			DEBUG('g', "Apago bit use en VPN %d\n",v->virtualPage);
 			// Los nodos apagados los acumulo en una lista
 			UpdatePointer();
 		}else{
 			if(v->dirty && pT[v->virtualPage].dirty){
 				// Si la víctima pertenece al proceso actual, actualizo la TLB
 				v->dirty = false;
+				DEBUG('g', "Apago bit dirty en VPN %d\n",v->virtualPage);
 				UpdatePointer();
 			}else{
 				victimFound = true;
@@ -113,6 +115,13 @@ void PrintVictim(Victim *v)
 void PrintVictims()
 {
 	victims->Apply(PrintVictim);
+	printf("\n");
+}
+
+void PrintVictimsArray()
+{
+	for (unsigned i = 0; i < NUM_PHYS_PAGES; i++)
+		PrintVictim(victimsArray[i]);
 	printf("\n");
 }
 // Dado un puntero a thread y un buffer, carga en el buffer el nombre del archivo swap
@@ -214,6 +223,7 @@ void SetAllUseBitOff(Thread *thread)
 
 void DiscardAccesses()
 {
-    if(ratio)
-        accesses --;
+    //if(ratio)
+        //accesses --;
+	// TODO: no hacemos nada, corregir en algun momento del futuro
 }

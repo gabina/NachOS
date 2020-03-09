@@ -256,80 +256,100 @@ ExceptionHandler(ExceptionType which)
 			Debe buscar en la memoria cuál es el marco correspondiente. 
 			La nueva entrada debe ser agregada a la TLB*/
 
+			//#define USAR_FIFO
+			#define USAR_RELOJMEJORADO
+			
 			#ifdef USE_TLB
-				int frame;
-				// Cuento un nuevo miss
-				if(ratio)					
-					misses ++;
-				// Leo la dirección que produjo la falla
-				int virtAddr = machine->ReadRegister(BAD_VADDR_REG);
-				// Recupero tabla de páginas
-				TranslationEntry *currentPageTable = (currentThread->space)->pageTable;
-				// Calculate the virtual page number from the virtual address.
-				unsigned vpn = (unsigned) virtAddr / PAGE_SIZE;
+			int frame;
+			// Cuento un nuevo miss
+			if(ratio)					
+				misses ++;
+			// Leo la dirección que produjo la falla
+			int virtAddr = machine->ReadRegister(BAD_VADDR_REG);
+			// Recupero tabla de páginas
+			TranslationEntry *currentPageTable = (currentThread->space)->pageTable;
+			// Calculate the virtual page number from the virtual address.
+			unsigned vpn = (unsigned) virtAddr / PAGE_SIZE;
 
-				if (tracePages) {
-					printf("VPN_ACCESS**%d\n", vpn);
-				}
+			unsigned offset = (unsigned) virtAddr % PAGE_SIZE;
+			DEBUG('g', "PAGE FAULT en página virtual %u offset %u\n",vpn,offset);
+			/* Si la página no está marcada en la tabla como válida,
+			* entonces no está cargada en memoria y debo hacerlo*/
+			if (!currentPageTable[vpn].valid){
+				DEBUG('g', "La página virtual %u no está cargada en memoria\n",vpn);
+				#ifdef VMEM
+				/* Si no hay marcos de memoria física disponibles*/
+				if(!bitmap->NumClear()){
+					DEBUG('g', "No hay marcos disponibles. Voy a hacer swap\n");
 
-				//unsigned offset = (unsigned) virtAddr % PAGE_SIZE;
-				//printf("PAGE FAULT en página virtual %u offset %u\n",vpn,offset);
-				/* Si la página no está marcada en la tabla como válida,
-				* entonces no está cargada en memoria y debo hacerlo*/
-				if (!currentPageTable[vpn].valid){
-					//printf("La página virtual %u no está cargada en memoria\n",vpn);
-					#ifdef VMEM
-					/* Si no hay marcos de memoria física disponibles*/
-					if(!bitmap->NumClear()){
-						//printf("No hay marcos disponibles. Voy a hacer swap\n");
-						int physicalPage = GiveVictimArray();
-						Victim *victim = victimsArray[physicalPage];
-						Thread *victimThread = processTable->GetProcess(victim->process);
-						TranslationEntry *victimPageTable = (victimThread->space)->pageTable;
-						//unsigned physicalPage = victimPageTable[victim->virtualPage].physicalPage;
-						//printf("La víctima es vpn %u\n",victim->virtualPage);
-						//TO DO: copiar la página en el archivo correspondiente y liberarla
-
-						/* Si la página víctima corresponde al mismo proceso que
-						 * el thread actual, entonces debo sacar de la TLB todas
-						 * las entradas correspondientes a la página virtual víctima.
-						 * Antes debo actualizar la tabla de páginas con respecto a la TLB*/
-						if(currentThread == victimThread){  
-							updatePT(victimPageTable, victim->virtualPage);
-							invalidateEntry(victim->virtualPage);
-						}
-
-						/* Muevo la página de la memoria al swap*/
-						toSwap(victimThread, victim->virtualPage);
-					}
-					//Debo carga la página en memoria
-					//Si el bit de swap está encendido, copiamos desde el swap
-					if(currentPageTable[vpn].swap)
-						frame = (currentThread->space)->FromSwap(currentThread->swap,vpn);
-					else //cargo desde el ejecutable
-						frame = (currentThread->space)->OnDemand(vpn);
-
-
-					/*Victim *newVictim = new Victim;
-					newVictim->process = currentThread->GetID();
-					newVictim->virtualPage = vpn; 
-					newVictim->dirty = true;
-					victims->Append(newVictim);*/
-
-					victimsArray[frame]->process = currentThread->GetID();
-					victimsArray[frame]->virtualPage = vpn; 
-					victimsArray[frame]->dirty = true;
-
-					//printf("Agrego victima %u\n",vpn);
-					//PrintVictims();	
+					// PARA FIFO
+					#ifdef USAR_FIFO
+					Victim *victim = GiveVictimFIFO();
+					Thread *victimThread = processTable->GetProcess(victim->process);
+					TranslationEntry *victimPageTable = (victimThread->space)->pageTable;
+					unsigned physicalPage = victimPageTable[victim->virtualPage].physicalPage;
 					#endif
-				}
-				// Actualizo la tabla de páginas de la entrada que voy a reemplazar
-				updatePT(currentPageTable, machine->tlb[nextEntry].virtualPage);
 
-				// Cargo la entrada al TLB
-				(machine->tlb)[nextEntry] = currentPageTable[vpn];
-				nextEntry = (nextEntry+1) %	TLB_SIZE;
+					// PARA ALGORITMO MEJORADO DEL RELOJ
+					#ifdef USAR_RELOJMEJORADO
+					int physicalPage = GiveVictimArray();
+					Victim *victim = victimsArray[physicalPage];
+					Thread *victimThread = processTable->GetProcess(victim->process);
+					TranslationEntry *victimPageTable = (victimThread->space)->pageTable;
+					#endif
+
+					
+					DEBUG('g', "La víctima es vpn %u\n",victim->virtualPage);
+					//TO DO: copiar la página en el archivo correspondiente y liberarla
+
+					/* Si la página víctima corresponde al mismo proceso que
+					* el thread actual, entonces debo sacar de la TLB todas
+					* las entradas correspondientes a la página virtual víctima.
+					* Antes debo actualizar la tabla de páginas con respecto a la TLB*/
+					if(currentThread == victimThread){ 
+						updatePT(victimPageTable, victim->virtualPage);
+						invalidateEntry(victim->virtualPage);
+					}
+
+					/* Muevo la página de la memoria al swap*/
+					toSwap(victimThread, victim->virtualPage);
+				}
+				//Debo carga la página en memoria
+				//Si el bit de swap está encendido, copiamos desde el swap
+				if(currentPageTable[vpn].swap)
+					frame = (currentThread->space)->FromSwap(currentThread->swap,vpn);
+				else //cargo desde el ejecutable
+					frame = (currentThread->space)->OnDemand(vpn);
+
+
+				// PARA FIFO
+				#ifdef USAR_FIFO
+				Victim *newVictim = new Victim;
+				newVictim->process = currentThread->GetID();
+				newVictim->virtualPage = vpn; 
+				newVictim->dirty = true;
+				victims->Append(newVictim);
+				#endif
+
+				// PARA ALGORITMO MEJORADO DEL RELOJ
+				#ifdef USAR_RELOJMEJORADO
+				//printf("victimsArray[%d]->virtualPage = %d.\n", frame,vpn);
+				victimsArray[frame]->process = currentThread->GetID();
+				victimsArray[frame]->virtualPage = vpn; 
+				victimsArray[frame]->dirty = true;
+				#endif
+
+				//printf("Agrego victima %u\n",vpn);
+				//PrintVictims();	
+				//PrintVictimsArray();
+				#endif
+			}
+			// Actualizo la tabla de páginas de la entrada que voy a reemplazar
+			updatePT(currentPageTable, machine->tlb[nextEntry].virtualPage);
+
+			// Cargo la entrada al TLB
+			(machine->tlb)[nextEntry] = currentPageTable[vpn];
+			nextEntry = (nextEntry+1) %	TLB_SIZE;
 			#endif
 			}
 			break;
