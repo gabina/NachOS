@@ -1,0 +1,190 @@
+----------------------SORT-------------------
+---------------------8-4---------------------
+
+Corrimos:
+./nachos -x ../test/sort -trace -ratio
+
+Con USAR_FIFO definida, 8 páginas físicas, 4 entradas TLB
+
+Accesos 218429, Hits 205646, Ratio hits 0.941478, Accesos a disco 11
+
+**********
+
+Corrimos:
+./nachos -x ../test/sort -trace -ratio
+
+Con USAR_RELOJMEJORADO definida, 8 páginas físicas, 4 entradas TLB
+
+Accesos 218429, Hits 205646, Ratio hits 0.941478, Accesos a disco 11
+
+----------------------SORT-------------------
+---------------------4-4---------------------
+
+Corrimos:
+./nachos -x ../test/sort -trace -ratio
+
+Con USAR_FIFO definida, 4 páginas físicas, 4 entradas TLB
+
+Accesos 218429, Hits 205646, Ratio hits 0.941478, Accesos a disco 17916
+
+****
+Corrimos:
+./nachos -x ../test/sort -trace -ratio
+
+Con USAR_RELOJMEJORADO definida, 4 páginas físicas, 4 entradas TLB
+
+Accesos 218665, Hits 205419, Ratio hits 0.939423, Accesos a disco 10963
+
+----------------------MATMULT-------------------
+-----------------------8-4---------------------
+
+Corrimos:
+./nachos -x ../test/matmult -trace -ratio
+
+Con USAR_FIFO definida, 8 páginas físicas, 4 entradas TLB
+
+Accesos 99039746, Hits 90464522, Ratio hits 0.913416, Accesos a disco 5502076
+
+Corrimos:
+./nachos -x ../test/matmult -trace -ratio
+
+Con USAR_RELOJMEJORADO definida, 8 páginas físicas, 4 entradas TLB
+
+Accesos 99041477, Hits 90964530, Ratio hits 0.918449, Accesos a disco 9725418
+
+****
+
+----------------------MATMULT-------------------
+-----------------------4-4---------------------
+
+Corrimos:
+./nachos -x ../test/matmult -trace -ratio
+
+Con USAR_FIFO definida, 4 páginas físicas, 4 entradas TLB
+
+Accesos 99039664, Hits 90964534, Ratio hits 0.918466, Accesos a disco 10114249
+
+****
+Corrimos:
+./nachos -x ../test/matmult -trace -ratio
+
+Con USAR_RELOJMEJORADO definida, 4 páginas físicas, 4 entradas TLB
+
+Accesos 99042673, Hits 90964468, Ratio hits 0.918437, Accesos a disco 9441174
+
+----------------------FILETEST-------------------
+-----------------------4-4---------------------
+
+
+Con ÓPTIMO 4 páginas físicas
+
+    Total references: 161
+    Total distinct references: 5
+    Hits: 154
+    Faults: 7
+    Hit rate: 154/161 = 95.652173913043%
+    Fault rate: 7/161 = 4.3478260869565%
+
+******    
+Corrimos:
+./nachos -x ../test/filetest -trace -ratio
+
+Con USAR_RELOJMEJORADO definida, 4 páginas físicas, 4 entradas TLB
+
+Accesos 161, Hits 149, Ratio hits 0.925466, Accesos a disco 12
+
+*****
+Corrimos:
+./nachos -x ../test/filetest -trace -ratio
+
+Con USAR_FIFO definida, 4 páginas físicas, 4 entradas TLB
+
+Accesos 161, Hits 149, Ratio hits 0.925466, Accesos a disco 14
+
+----------------------SORT DIM10-------------------
+-----------------------4-4---------------------
+
+Con ÓPTIMO 4 páginas físicas
+
+    Total references: 2711
+    Total distinct references: 7
+    Hits: 2654
+    Faults: 57
+    Hit rate: 2654/2711 = 97.897454813722%
+    Fault rate: 57/2711 = 2.1025451862781%
+
+******
+Corrimos:
+ ./nachos -x ../test/sort -ratio -trace
+
+Con USAR_RELOJMEJORADO definida, 4 páginas físicas, 4 entradas TLB
+
+Accesos 2724, Hits 2547, Ratio hits 0.935022, Accesos a disco 141    
+******
+Corrimos:
+ ./nachos -x ../test/sort -ratio -trace
+
+Con USAR_FIFO definida, 4 páginas físicas, 4 entradas TLB
+
+Accesos 2711, Hits 2570, Ratio hits 0.947990, Accesos a disco 198
+
+____________________________-
+viejas
+
+ALGORITMO MEJORADO DEL RELOJ
+
+sort
+Accesos 213307, Hits 172447, Ratio hits 0.808445
+
+matmult
+Accesos 94994638, Hits 82827929, Ratio hits 0.871922
+
+SEGUNDA OPORTUNIDAD
+
+sort
+Accesos 213307, Hits 172113, Ratio hits 0.806879
+
+matmult
+Accesos 94994638, Hits 82833529, Ratio hits 0.871981
+
+
+FIFO
+
+sort
+Accesos 213307, Hits 172257, Ratio hits 0.807554
+
+matmult
+Accesos 94994638, Hits 82828854, Ratio hits 0.871932
+
+
+__________________________________-
+
+TLB SIZE	2
+	
+SORT	0.777049
+MATMULT	0.851351
+	
+	
+TLB SIZE	4
+	
+SORT	0.953873
+MATMULT	0.906739
+	
+	
+TLB SIZE	8
+	
+SORT	0.999817
+MATMULT	0.962057
+	
+	
+TLB SIZE	16
+	
+SORT	0.999939
+MATMULT	0.981814
+	
+	
+TLB SIZE	32
+	
+SORT	0.999939
+MATMULT	0.986522
+
